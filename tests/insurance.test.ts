@@ -45,6 +45,19 @@ describe("InsurTech AI Platform -- demo data integrity", () => {
     }
   });
 
+  it("captures FNOL intake channel and document readiness for every claim", () => {
+    for (const claim of demoClaims) {
+      expect(claim.fnolChannel).toMatch(/^(mobile_app|agent_portal|call_center|web_form)$/);
+      expect(claim.documentStatus).toMatch(/^(complete|pending_customer|pending_third_party|needs_review)$/);
+    }
+  });
+
+  it("keeps claims ready for payout free of intake document blockers", () => {
+    for (const claim of demoClaims.filter((c) => ["approved", "paid"].includes(c.status))) {
+      expect(claim.documentStatus).toBe("complete");
+    }
+  });
+
   it("policy premium values are internally consistent", () => {
     for (const policy of demoPolicies) {
       expect(policy.annualPremium).toBe(policy.monthlyPremium * 12);

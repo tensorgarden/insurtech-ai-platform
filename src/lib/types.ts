@@ -6,6 +6,10 @@ export type ClaimStatus = "new" | "under_review" | "approved" | "paid" | "denied
 
 export type ClaimType = "auto_collision" | "auto_theft" | "home_theft" | "home_fire" | "life_payout" | "commercial_liability";
 
+export type FnolChannel = "mobile_app" | "agent_portal" | "call_center" | "web_form";
+
+export type ClaimDocumentStatus = "complete" | "pending_customer" | "pending_third_party" | "needs_review";
+
 export type CustomerTier = "platinum" | "gold" | "silver" | "standard";
 
 export type RiskLevel = "low" | "moderate" | "elevated" | "high";
@@ -39,6 +43,8 @@ export interface Claim {
   payoutAmount: number;
   filedDate: string;
   lastUpdated: string;
+  fnolChannel: FnolChannel;
+  documentStatus: ClaimDocumentStatus;
   aiFraudScore: number;
   adjuster: string;
   notes: string;
