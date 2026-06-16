@@ -41,6 +41,7 @@ export interface Claim {
   amount: number;
   deductibleApplied: number;
   payoutAmount: number;
+  reserveAmount: number;
   filedDate: string;
   lastUpdated: string;
   fnolChannel: FnolChannel;

@@ -319,6 +319,37 @@ function ClaimCard({ claim }: { claim: Claim }) {
           })}
         </span>
       </div>
+      {claim.reserveAmount > 0 && (
+        <div className="mt-1.5 flex items-center gap-2 text-xs">
+          <span className="text-slate-400">Reserve:</span>
+          <span className="font-semibold text-slate-700">
+            {formatCurrency(claim.reserveAmount)}
+          </span>
+          {claim.status === "paid" && claim.payoutAmount > 0 && (
+            <span
+              className={
+                claim.reserveAmount > claim.payoutAmount
+                  ? "text-amber-600"
+                  : claim.reserveAmount < claim.payoutAmount
+                    ? "text-red-600"
+                    : "text-emerald-600"
+              }
+            >
+              ({claim.reserveAmount > claim.payoutAmount
+                ? `+${formatCurrency(claim.reserveAmount - claim.payoutAmount)} over`
+                : claim.reserveAmount < claim.payoutAmount
+                  ? `-${formatCurrency(claim.payoutAmount - claim.reserveAmount)} under`
+                  : "accurate"}
+              )
+            </span>
+          )}
+          {claim.status === "denied" && (
+            <span className="text-red-600">
+              (released {formatCurrency(claim.reserveAmount)})
+            </span>
+          )}
+        </div>
+      )}
       {claim.status === "denied" && (
         <p className="mt-2 text-xs text-red-600 bg-red-50 rounded-lg p-2">{claim.notes}</p>
       )}

@@ -87,4 +87,30 @@ describe("InsurTech AI Platform -- demo data integrity", () => {
       expect(totalWeight).toBeCloseTo(1.0, 1);
     }
   });
+
+  it("claim reserves are positive and cover expected payout when resolved", () => {
+    for (const claim of demoClaims) {
+      expect(claim.reserveAmount).toBeGreaterThan(0);
+      // Paid claims: reserve should cover the payout (no reserve deficiency on closed claims)
+      if (claim.status === "paid") {
+        expect(claim.reserveAmount).toBeGreaterThanOrEqual(claim.payoutAmount);
+      }
+      // Denied claims: reserve was set but payout is zero (reserve released)
+      if (claim.status === "denied") {
+        expect(claim.payoutAmount).toBe(0);
+        expect(claim.reserveAmount).toBeGreaterThan(0);
+      }
+    }
+  });
+
+  it("open claims under review carry conservative reserves", () => {
+    const openClaims = demoClaims.filter((c) =>
+      ["new", "under_review"].includes(c.status)
+    );
+    for (const claim of openClaims) {
+      // Open claims should have reserves at or above the expected payout floor
+      const expectedPayoutFloor = claim.amount - claim.deductibleApplied;
+      expect(claim.reserveAmount).toBeGreaterThanOrEqual(expectedPayoutFloor);
+    }
+  });
 });
