@@ -10,6 +10,17 @@ export type FnolChannel = "mobile_app" | "agent_portal" | "call_center" | "web_f
 
 export type ClaimDocumentStatus = "complete" | "pending_customer" | "pending_third_party" | "needs_review";
 
+export type ClaimReviewGate = "auto_clear" | "adjuster_review" | "supervisor_review" | "legal_review";
+
+export type ClaimEvidenceSource =
+  | "police_report"
+  | "photos"
+  | "repair_estimate"
+  | "fire_report"
+  | "policy_record"
+  | "medical_bill"
+  | "customer_statement";
+
 export type CustomerTier = "platinum" | "gold" | "silver" | "standard";
 
 export type RiskLevel = "low" | "moderate" | "elevated" | "high";
@@ -31,6 +42,12 @@ export interface Policy {
   tags: string[];
 }
 
+export interface ClaimEvidenceAnchor {
+  label: string;
+  sourceType: ClaimEvidenceSource;
+  receivedAt: string;
+}
+
 export interface Claim {
   id: string;
   claimNumber: string;
@@ -46,6 +63,10 @@ export interface Claim {
   lastUpdated: string;
   fnolChannel: FnolChannel;
   documentStatus: ClaimDocumentStatus;
+  reviewGate: ClaimReviewGate;
+  adverseActionNoticeRequired: boolean;
+  aiDecisionRationale: string;
+  evidenceAnchors: ClaimEvidenceAnchor[];
   aiFraudScore: number;
   adjuster: string;
   notes: string;

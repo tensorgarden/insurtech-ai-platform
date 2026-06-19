@@ -281,6 +281,13 @@ function ClaimCard({ claim }: { claim: Claim }) {
             : "red";
   const fraudColor =
     claim.aiFraudScore >= 70 ? "red" : claim.aiFraudScore >= 40 ? "amber" : "green";
+  const reviewGateTone: Record<Claim["reviewGate"], "green" | "blue" | "amber" | "purple"> = {
+    auto_clear: "green",
+    adjuster_review: "blue",
+    supervisor_review: "amber",
+    legal_review: "purple",
+  };
+  const reviewGateLabel = claim.reviewGate.split("_").join(" ");
 
   const typeLabel: Record<string, string> = {
     auto_collision: "Auto Collision",
@@ -311,6 +318,7 @@ function ClaimCard({ claim }: { claim: Claim }) {
         <div className="flex items-center gap-2">
           <span className="text-slate-400">Adjuster: {claim.adjuster}</span>
           <Badge tone={fraudColor}>Fraud: {claim.aiFraudScore}/100</Badge>
+          <Badge tone={reviewGateTone[claim.reviewGate]}>{reviewGateLabel}</Badge>
         </div>
         <span className="text-slate-400">
           {new Date(claim.filedDate).toLocaleDateString("en-US", {
@@ -350,6 +358,14 @@ function ClaimCard({ claim }: { claim: Claim }) {
           )}
         </div>
       )}
+      <div className="mt-2 rounded-lg bg-slate-50 p-2 text-xs text-slate-600">
+        <div className="font-semibold text-slate-700">AI rationale</div>
+        <p>{claim.aiDecisionRationale}</p>
+        <div className="mt-1 text-slate-400">
+          {claim.evidenceAnchors.length} evidence anchors --{" "}
+          {claim.adverseActionNoticeRequired ? "adverse notice required" : "no adverse notice"}
+        </div>
+      </div>
       {claim.status === "denied" && (
         <p className="mt-2 text-xs text-red-600 bg-red-50 rounded-lg p-2">{claim.notes}</p>
       )}

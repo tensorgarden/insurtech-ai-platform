@@ -58,6 +58,44 @@ describe("InsurTech AI Platform -- demo data integrity", () => {
     }
   });
 
+  it("records explainable AI rationale and evidence anchors for every claim", () => {
+    const validEvidenceSources = new Set([
+      "police_report",
+      "photos",
+      "repair_estimate",
+      "fire_report",
+      "policy_record",
+      "medical_bill",
+      "customer_statement",
+    ]);
+
+    for (const claim of demoClaims) {
+      expect(claim.aiDecisionRationale.length).toBeGreaterThan(50);
+      expect(claim.evidenceAnchors.length).toBeGreaterThanOrEqual(2);
+      for (const anchor of claim.evidenceAnchors) {
+        expect(anchor.label.length).toBeGreaterThan(10);
+        expect(validEvidenceSources.has(anchor.sourceType)).toBe(true);
+        expect(Number.isNaN(Date.parse(anchor.receivedAt))).toBe(false);
+      }
+    }
+  });
+
+  it("routes denied or adverse claim recommendations through human review", () => {
+    const elevatedReviewGates = new Set(["supervisor_review", "legal_review"]);
+    for (const claim of demoClaims.filter((c) => c.status === "denied" || c.adverseActionNoticeRequired)) {
+      expect(claim.adverseActionNoticeRequired).toBe(true);
+      expect(elevatedReviewGates.has(claim.reviewGate)).toBe(true);
+      expect(claim.evidenceAnchors.some((a) => a.sourceType === "policy_record")).toBe(true);
+    }
+  });
+
+  it("does not auto-clear high-fraud or large-loss claim decisions", () => {
+    for (const claim of demoClaims.filter((c) => c.aiFraudScore >= 70 || c.amount >= 80000)) {
+      expect(claim.reviewGate).not.toBe("auto_clear");
+      expect(claim.aiDecisionRationale).toMatch(/review|policy|reserve|loss|settlement/i);
+    }
+  });
+
   it("policy premium values are internally consistent", () => {
     for (const policy of demoPolicies) {
       expect(policy.annualPremium).toBe(policy.monthlyPremium * 12);
