@@ -311,6 +311,8 @@ export const demoClaims: Claim[] = [
     fnolChannel: "mobile_app",
     documentStatus: "complete",
     reviewGate: "adjuster_review",
+    triageLane: "fast_attention",
+    triageSignals: ["complete_evidence", "liability_review"],
     adverseActionNoticeRequired: false,
     aiDecisionRationale: "Low fraud score with aligned dashcam and police details; adjuster verifies liability before payout recommendation.",
     evidenceAnchors: [
@@ -337,6 +339,8 @@ export const demoClaims: Claim[] = [
     fnolChannel: "agent_portal",
     documentStatus: "pending_third_party",
     reviewGate: "supervisor_review",
+    triageLane: "missing_information",
+    triageSignals: ["third_party_dependency", "large_loss"],
     adverseActionNoticeRequired: false,
     aiDecisionRationale: "Large-loss fire claim remains pending until third-party restoration estimate and fire department findings reconcile with the reserve.",
     evidenceAnchors: [
@@ -363,6 +367,8 @@ export const demoClaims: Claim[] = [
     fnolChannel: "web_form",
     documentStatus: "complete",
     reviewGate: "adjuster_review",
+    triageLane: "standard",
+    triageSignals: ["complete_evidence"],
     adverseActionNoticeRequired: false,
     aiDecisionRationale: "Theft payout cleared after police report, policy status, and recovery attempts support the covered loss amount.",
     evidenceAnchors: [
@@ -389,6 +395,8 @@ export const demoClaims: Claim[] = [
     fnolChannel: "call_center",
     documentStatus: "complete",
     reviewGate: "legal_review",
+    triageLane: "specialist_review",
+    triageSignals: ["legal_exposure"],
     adverseActionNoticeRequired: false,
     aiDecisionRationale: "Liability settlement required legal review because medical bills and premises inspection findings drove the payout recommendation.",
     evidenceAnchors: [
@@ -415,6 +423,8 @@ export const demoClaims: Claim[] = [
     fnolChannel: "mobile_app",
     documentStatus: "complete",
     reviewGate: "adjuster_review",
+    triageLane: "standard",
+    triageSignals: ["complete_evidence"],
     adverseActionNoticeRequired: false,
     aiDecisionRationale: "Home theft claim paid after police report and item photos supported the scheduled personal-property loss.",
     evidenceAnchors: [
@@ -441,6 +451,8 @@ export const demoClaims: Claim[] = [
     fnolChannel: "call_center",
     documentStatus: "needs_review",
     reviewGate: "supervisor_review",
+    triageLane: "specialist_review",
+    triageSignals: ["high_fraud_score", "coverage_dispute", "adverse_action_risk"],
     adverseActionNoticeRequired: true,
     aiDecisionRationale: "Potential adverse claim decision is routed to supervisor review because policy records show a coverage gap and statements conflict.",
     evidenceAnchors: [

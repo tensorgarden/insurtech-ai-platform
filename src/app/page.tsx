@@ -288,6 +288,16 @@ function ClaimCard({ claim }: { claim: Claim }) {
     legal_review: "purple",
   };
   const reviewGateLabel = claim.reviewGate.split("_").join(" ");
+  const triageLaneTone: Record<Claim["triageLane"], "green" | "blue" | "amber" | "purple"> = {
+    standard: "green",
+    fast_attention: "blue",
+    specialist_review: "purple",
+    missing_information: "amber",
+  };
+  const triageLaneLabel = claim.triageLane.split("_").join(" ");
+  const triageSignalsLabel = claim.triageSignals
+    .map((signal) => signal.split("_").join(" "))
+    .join(", ");
 
   const typeLabel: Record<string, string> = {
     auto_collision: "Auto Collision",
@@ -319,6 +329,7 @@ function ClaimCard({ claim }: { claim: Claim }) {
           <span className="text-slate-400">Adjuster: {claim.adjuster}</span>
           <Badge tone={fraudColor}>Fraud: {claim.aiFraudScore}/100</Badge>
           <Badge tone={reviewGateTone[claim.reviewGate]}>{reviewGateLabel}</Badge>
+          <Badge tone={triageLaneTone[claim.triageLane]}>{triageLaneLabel}</Badge>
         </div>
         <span className="text-slate-400">
           {new Date(claim.filedDate).toLocaleDateString("en-US", {
@@ -362,7 +373,8 @@ function ClaimCard({ claim }: { claim: Claim }) {
         <div className="font-semibold text-slate-700">AI rationale</div>
         <p>{claim.aiDecisionRationale}</p>
         <div className="mt-1 text-slate-400">
-          {claim.evidenceAnchors.length} evidence anchors --{" "}
+          {claim.evidenceAnchors.length} evidence anchors -- triage signals: {triageSignalsLabel}
+          {" -- "}
           {claim.adverseActionNoticeRequired ? "adverse notice required" : "no adverse notice"}
         </div>
       </div>

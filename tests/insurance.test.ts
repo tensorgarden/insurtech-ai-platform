@@ -96,6 +96,32 @@ describe("InsurTech AI Platform -- demo data integrity", () => {
     }
   });
 
+  it("keeps AI triage lane routing evidence-linked and governed", () => {
+    for (const claim of demoClaims) {
+      expect(claim.triageSignals.length).toBeGreaterThan(0);
+
+      if (["pending_customer", "pending_third_party"].includes(claim.documentStatus)) {
+        expect(claim.triageLane).toBe("missing_information");
+        expect(
+          claim.triageSignals.some((signal) =>
+            ["missing_required_documents", "third_party_dependency"].includes(signal),
+          ),
+        ).toBe(true);
+      }
+
+      if (claim.amount >= 80000 || claim.aiFraudScore >= 70 || claim.adverseActionNoticeRequired) {
+        expect(["missing_information", "specialist_review"]).toContain(claim.triageLane);
+        expect(claim.reviewGate).not.toBe("auto_clear");
+      }
+
+      if (claim.triageLane === "standard") {
+        expect(claim.documentStatus).toBe("complete");
+        expect(claim.adverseActionNoticeRequired).toBe(false);
+        expect(claim.aiFraudScore).toBeLessThan(40);
+      }
+    }
+  });
+
   it("policy premium values are internally consistent", () => {
     for (const policy of demoPolicies) {
       expect(policy.annualPremium).toBe(policy.monthlyPremium * 12);

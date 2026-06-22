@@ -12,6 +12,19 @@ export type ClaimDocumentStatus = "complete" | "pending_customer" | "pending_thi
 
 export type ClaimReviewGate = "auto_clear" | "adjuster_review" | "supervisor_review" | "legal_review";
 
+export type ClaimTriageLane = "standard" | "fast_attention" | "specialist_review" | "missing_information";
+
+export type ClaimTriageSignal =
+  | "complete_evidence"
+  | "missing_required_documents"
+  | "third_party_dependency"
+  | "large_loss"
+  | "high_fraud_score"
+  | "coverage_dispute"
+  | "legal_exposure"
+  | "adverse_action_risk"
+  | "liability_review";
+
 export type ClaimEvidenceSource =
   | "police_report"
   | "photos"
@@ -64,6 +77,8 @@ export interface Claim {
   fnolChannel: FnolChannel;
   documentStatus: ClaimDocumentStatus;
   reviewGate: ClaimReviewGate;
+  triageLane: ClaimTriageLane;
+  triageSignals: ClaimTriageSignal[];
   adverseActionNoticeRequired: boolean;
   aiDecisionRationale: string;
   evidenceAnchors: ClaimEvidenceAnchor[];
