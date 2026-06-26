@@ -12,6 +12,8 @@ export type ClaimDocumentStatus = "complete" | "pending_customer" | "pending_thi
 
 export type ClaimReviewGate = "auto_clear" | "adjuster_review" | "supervisor_review" | "legal_review";
 
+export type ClaimGovernanceOwnerRole = "adjuster" | "supervisor" | "legal" | "customer" | "third_party";
+
 export type ClaimTriageLane = "standard" | "fast_attention" | "specialist_review" | "missing_information";
 
 export type ClaimTriageSignal =
@@ -61,6 +63,12 @@ export interface ClaimEvidenceAnchor {
   receivedAt: string;
 }
 
+export interface ClaimGovernanceCheckpoint {
+  ownerRole: ClaimGovernanceOwnerRole;
+  dueAt: string;
+  nextAction: string;
+}
+
 export interface Claim {
   id: string;
   claimNumber: string;
@@ -80,6 +88,7 @@ export interface Claim {
   triageLane: ClaimTriageLane;
   triageSignals: ClaimTriageSignal[];
   adverseActionNoticeRequired: boolean;
+  governanceCheckpoint: ClaimGovernanceCheckpoint;
   aiDecisionRationale: string;
   evidenceAnchors: ClaimEvidenceAnchor[];
   aiFraudScore: number;

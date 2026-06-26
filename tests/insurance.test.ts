@@ -122,6 +122,32 @@ describe("InsurTech AI Platform -- demo data integrity", () => {
     }
   });
 
+  it("keeps each claim tied to a dated governance checkpoint", () => {
+    const validOwnerRoles = new Set(["adjuster", "supervisor", "legal", "customer", "third_party"]);
+
+    for (const claim of demoClaims) {
+      expect(validOwnerRoles.has(claim.governanceCheckpoint.ownerRole)).toBe(true);
+      expect(claim.governanceCheckpoint.nextAction.length).toBeGreaterThan(40);
+      expect(Number.isNaN(Date.parse(claim.governanceCheckpoint.dueAt))).toBe(false);
+    }
+  });
+
+  it("assigns missing-info and adverse decisions to accountable follow-up", () => {
+    for (const claim of demoClaims) {
+      if (claim.triageLane === "missing_information") {
+        expect(["customer", "third_party"]).toContain(claim.governanceCheckpoint.ownerRole);
+        expect(claim.governanceCheckpoint.nextAction).toMatch(
+          /collect|pending|estimate|reconcile|document/i,
+        );
+      }
+
+      if (claim.adverseActionNoticeRequired) {
+        expect(["supervisor", "legal"]).toContain(claim.governanceCheckpoint.ownerRole);
+        expect(claim.governanceCheckpoint.nextAction).toMatch(/notice|policy|supervisor|legal/i);
+      }
+    }
+  });
+
   it("policy premium values are internally consistent", () => {
     for (const policy of demoPolicies) {
       expect(policy.annualPremium).toBe(policy.monthlyPremium * 12);

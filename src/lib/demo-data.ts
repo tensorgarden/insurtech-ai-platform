@@ -314,6 +314,11 @@ export const demoClaims: Claim[] = [
     triageLane: "fast_attention",
     triageSignals: ["complete_evidence", "liability_review"],
     adverseActionNoticeRequired: false,
+    governanceCheckpoint: {
+      ownerRole: "adjuster",
+      dueAt: "2026-06-09T17:00:00Z",
+      nextAction: "Confirm liability decision and customer estimate match before first payout recommendation.",
+    },
     aiDecisionRationale: "Low fraud score with aligned dashcam and police details; adjuster verifies liability before payout recommendation.",
     evidenceAnchors: [
       { label: "Dashcam stills from insured vehicle", sourceType: "photos", receivedAt: "2026-06-08T09:45:00Z" },
@@ -342,6 +347,11 @@ export const demoClaims: Claim[] = [
     triageLane: "missing_information",
     triageSignals: ["third_party_dependency", "large_loss"],
     adverseActionNoticeRequired: false,
+    governanceCheckpoint: {
+      ownerRole: "third_party",
+      dueAt: "2026-06-10T17:00:00Z",
+      nextAction: "Collect the pending restoration estimate and reconcile fire department findings with the reserve before settlement review.",
+    },
     aiDecisionRationale: "Large-loss fire claim remains pending until third-party restoration estimate and fire department findings reconcile with the reserve.",
     evidenceAnchors: [
       { label: "Fire department incident report", sourceType: "fire_report", receivedAt: "2026-05-23T10:20:00Z" },
@@ -370,6 +380,11 @@ export const demoClaims: Claim[] = [
     triageLane: "standard",
     triageSignals: ["complete_evidence"],
     adverseActionNoticeRequired: false,
+    governanceCheckpoint: {
+      ownerRole: "adjuster",
+      dueAt: "2026-06-02T17:00:00Z",
+      nextAction: "Send payout confirmation and close the evidence packet after the recovery window expires.",
+    },
     aiDecisionRationale: "Theft payout cleared after police report, policy status, and recovery attempts support the covered loss amount.",
     evidenceAnchors: [
       { label: "Vehicle theft police report", sourceType: "police_report", receivedAt: "2026-04-30T13:05:00Z" },
@@ -398,6 +413,11 @@ export const demoClaims: Claim[] = [
     triageLane: "specialist_review",
     triageSignals: ["legal_exposure"],
     adverseActionNoticeRequired: false,
+    governanceCheckpoint: {
+      ownerRole: "legal",
+      dueAt: "2026-05-17T17:00:00Z",
+      nextAction: "File the premises-safety follow-up note against the liability loss-control record.",
+    },
     aiDecisionRationale: "Liability settlement required legal review because medical bills and premises inspection findings drove the payout recommendation.",
     evidenceAnchors: [
       { label: "Medical bill packet", sourceType: "medical_bill", receivedAt: "2026-04-02T15:30:00Z" },
@@ -426,6 +446,11 @@ export const demoClaims: Claim[] = [
     triageLane: "standard",
     triageSignals: ["complete_evidence"],
     adverseActionNoticeRequired: false,
+    governanceCheckpoint: {
+      ownerRole: "adjuster",
+      dueAt: "2026-04-16T17:00:00Z",
+      nextAction: "Archive police report and item-photo evidence with the scheduled-property settlement worksheet.",
+    },
     aiDecisionRationale: "Home theft claim paid after police report and item photos supported the scheduled personal-property loss.",
     evidenceAnchors: [
       { label: "Police burglary report", sourceType: "police_report", receivedAt: "2026-03-03T08:30:00Z" },
@@ -454,6 +479,11 @@ export const demoClaims: Claim[] = [
     triageLane: "specialist_review",
     triageSignals: ["high_fraud_score", "coverage_dispute", "adverse_action_risk"],
     adverseActionNoticeRequired: true,
+    governanceCheckpoint: {
+      ownerRole: "supervisor",
+      dueAt: "2026-03-02T17:00:00Z",
+      nextAction: "Supervisor validates adverse-action notice language against policy-lapse evidence before customer notice.",
+    },
     aiDecisionRationale: "Potential adverse claim decision is routed to supervisor review because policy records show a coverage gap and statements conflict.",
     evidenceAnchors: [
       { label: "Policy lapse timeline", sourceType: "policy_record", receivedAt: "2026-02-10T08:05:00Z" },

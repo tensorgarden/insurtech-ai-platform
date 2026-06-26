@@ -377,6 +377,17 @@ function ClaimCard({ claim }: { claim: Claim }) {
           {" -- "}
           {claim.adverseActionNoticeRequired ? "adverse notice required" : "no adverse notice"}
         </div>
+        <div className="mt-2 rounded-md bg-white/70 p-2">
+          <div className="font-semibold text-slate-700">Governance checkpoint</div>
+          <p className="mt-1 text-slate-500">{claim.governanceCheckpoint.nextAction}</p>
+          <div className="mt-1 text-slate-400">
+            Owner: {claim.governanceCheckpoint.ownerRole.split("_").join(" ")} -- due {" "}
+            {new Date(claim.governanceCheckpoint.dueAt).toLocaleDateString("en-US", {
+              month: "short",
+              day: "numeric",
+            })}
+          </div>
+        </div>
       </div>
       {claim.status === "denied" && (
         <p className="mt-2 text-xs text-red-600 bg-red-50 rounded-lg p-2">{claim.notes}</p>
