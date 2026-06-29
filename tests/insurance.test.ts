@@ -148,6 +148,37 @@ describe("InsurTech AI Platform -- demo data integrity", () => {
     }
   });
 
+  it("keeps missing-information claims out of adjuster-ready queues until recontact blockers are resolved", () => {
+    for (const claim of demoClaims.filter((c) => c.triageLane === "missing_information")) {
+      expect(claim.documentStatus).not.toBe("complete");
+      expect(claim.reviewGate).not.toBe("auto_clear");
+      expect(claim.governanceCheckpoint.nextAction).toMatch(
+        /collect|pending|reconcile|document|estimate/i,
+      );
+
+      const lastUpdated = Date.parse(claim.lastUpdated);
+      const followUpDue = Date.parse(claim.governanceCheckpoint.dueAt);
+      expect(followUpDue).toBeGreaterThan(lastUpdated);
+      expect(followUpDue - lastUpdated).toBeLessThanOrEqual(5 * 24 * 60 * 60 * 1000);
+    }
+  });
+
+  it("routes third-party evidence gaps to third-party follow-up instead of customer recontact", () => {
+    const thirdPartyDependencyClaims = demoClaims.filter((c) =>
+      c.triageSignals.includes("third_party_dependency"),
+    );
+
+    expect(thirdPartyDependencyClaims.length).toBeGreaterThan(0);
+
+    for (const claim of thirdPartyDependencyClaims) {
+      expect(claim.governanceCheckpoint.ownerRole).toBe("third_party");
+      expect(`${claim.aiDecisionRationale} ${claim.notes}`).toMatch(
+        /third-party|estimate|fire|restoration/i,
+      );
+      expect(claim.triageLane).toBe("missing_information");
+    }
+  });
+
   it("policy premium values are internally consistent", () => {
     for (const policy of demoPolicies) {
       expect(policy.annualPremium).toBe(policy.monthlyPremium * 12);

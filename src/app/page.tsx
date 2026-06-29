@@ -325,11 +325,15 @@ function ClaimCard({ claim }: { claim: Claim }) {
         {policy?.policyNumber || claim.policyId}
       </div>
       <div className="flex items-center justify-between text-xs">
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <span className="text-slate-400">Adjuster: {claim.adjuster}</span>
           <Badge tone={fraudColor}>Fraud: {claim.aiFraudScore}/100</Badge>
           <Badge tone={reviewGateTone[claim.reviewGate]}>{reviewGateLabel}</Badge>
           <Badge tone={triageLaneTone[claim.triageLane]}>{triageLaneLabel}</Badge>
+          <Badge tone="slate">FNOL: {claim.fnolChannel.split("_").join(" ")}</Badge>
+          <Badge tone={claim.documentStatus === "complete" ? "green" : "amber"}>
+            Docs: {claim.documentStatus.split("_").join(" ")}
+          </Badge>
         </div>
         <span className="text-slate-400">
           {new Date(claim.filedDate).toLocaleDateString("en-US", {
