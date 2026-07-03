@@ -324,6 +324,11 @@ export const demoClaims: Claim[] = [
       { label: "Dashcam stills from insured vehicle", sourceType: "photos", receivedAt: "2026-06-08T09:45:00Z" },
       { label: "Police citation for other driver", sourceType: "police_report", receivedAt: "2026-06-08T12:10:00Z" },
     ],
+    evidenceRequirements: [
+      { label: "Dashcam stills from insured vehicle", status: "received", ownerRole: "adjuster" },
+      { label: "Police citation for other driver", status: "received", ownerRole: "adjuster" },
+      { label: "Initial repair estimate", status: "received", ownerRole: "adjuster" },
+    ],
     aiFraudScore: 12,
     adjuster: "Maria Gonzalez",
     notes: "Rear-end collision at intersection. Dashcam footage available. Other party cited.",
@@ -356,6 +361,21 @@ export const demoClaims: Claim[] = [
     evidenceAnchors: [
       { label: "Fire department incident report", sourceType: "fire_report", receivedAt: "2026-05-23T10:20:00Z" },
       { label: "Restoration scope estimate pending carrier review", sourceType: "repair_estimate", receivedAt: "2026-06-07T10:15:00Z" },
+    ],
+    evidenceRequirements: [
+      { label: "Fire department incident report", status: "received", ownerRole: "adjuster" },
+      {
+        label: "Restoration scope estimate",
+        status: "pending_third_party",
+        ownerRole: "third_party",
+        dueAt: "2026-06-10T17:00:00Z",
+      },
+      {
+        label: "Reserve reconciliation worksheet",
+        status: "needs_adjuster_review",
+        ownerRole: "supervisor",
+        dueAt: "2026-06-11T17:00:00Z",
+      },
     ],
     aiFraudScore: 18,
     adjuster: "Robert Kim",
@@ -390,6 +410,11 @@ export const demoClaims: Claim[] = [
       { label: "Vehicle theft police report", sourceType: "police_report", receivedAt: "2026-04-30T13:05:00Z" },
       { label: "Active policy and deductible confirmation", sourceType: "policy_record", receivedAt: "2026-05-01T09:00:00Z" },
     ],
+    evidenceRequirements: [
+      { label: "Vehicle theft police report", status: "received", ownerRole: "adjuster" },
+      { label: "Active policy and deductible confirmation", status: "received", ownerRole: "adjuster" },
+      { label: "Recovery window search log", status: "received", ownerRole: "adjuster" },
+    ],
     aiFraudScore: 5,
     adjuster: "Maria Gonzalez",
     notes: "Vehicle stolen from secured parking. Police report filed. GPS recovery unsuccessful. Payout processing.",
@@ -422,6 +447,11 @@ export const demoClaims: Claim[] = [
     evidenceAnchors: [
       { label: "Medical bill packet", sourceType: "medical_bill", receivedAt: "2026-04-02T15:30:00Z" },
       { label: "Customer incident statement", sourceType: "customer_statement", receivedAt: "2026-03-18T11:20:00Z" },
+    ],
+    evidenceRequirements: [
+      { label: "Medical bill packet", status: "received", ownerRole: "legal" },
+      { label: "Customer incident statement", status: "received", ownerRole: "legal" },
+      { label: "Premises safety inspection", status: "received", ownerRole: "adjuster" },
     ],
     aiFraudScore: 22,
     adjuster: "Jennifer Wu",
@@ -456,6 +486,11 @@ export const demoClaims: Claim[] = [
       { label: "Police burglary report", sourceType: "police_report", receivedAt: "2026-03-03T08:30:00Z" },
       { label: "Customer-uploaded property photos", sourceType: "photos", receivedAt: "2026-03-02T20:18:00Z" },
     ],
+    evidenceRequirements: [
+      { label: "Police burglary report", status: "received", ownerRole: "adjuster" },
+      { label: "Customer-uploaded property photos", status: "received", ownerRole: "adjuster" },
+      { label: "Scheduled-property settlement worksheet", status: "received", ownerRole: "adjuster" },
+    ],
     aiFraudScore: 9,
     adjuster: "Robert Kim",
     notes: "Break-in through rear window. Electronics and jewelry taken. Police report on file. Payout sent.",
@@ -488,6 +523,16 @@ export const demoClaims: Claim[] = [
     evidenceAnchors: [
       { label: "Policy lapse timeline", sourceType: "policy_record", receivedAt: "2026-02-10T08:05:00Z" },
       { label: "Recorded customer statement variance", sourceType: "customer_statement", receivedAt: "2026-02-11T10:40:00Z" },
+    ],
+    evidenceRequirements: [
+      { label: "Policy lapse timeline", status: "received", ownerRole: "supervisor" },
+      { label: "Recorded customer statement variance", status: "received", ownerRole: "supervisor" },
+      {
+        label: "Coverage denial notice language",
+        status: "needs_adjuster_review",
+        ownerRole: "supervisor",
+        dueAt: "2026-03-02T17:00:00Z",
+      },
     ],
     aiFraudScore: 87,
     adjuster: "Jennifer Wu",

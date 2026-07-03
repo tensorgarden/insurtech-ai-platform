@@ -80,6 +80,76 @@ describe("InsurTech AI Platform -- demo data integrity", () => {
     }
   });
 
+  it("tracks required evidence checklists before claims look adjuster-ready", () => {
+    const validRequirementStatuses = new Set([
+      "received",
+      "pending_customer",
+      "pending_third_party",
+      "needs_adjuster_review",
+    ]);
+    const validOwnerRoles = new Set(["adjuster", "supervisor", "legal", "customer", "third_party"]);
+
+    for (const claim of demoClaims) {
+      expect(claim.evidenceRequirements.length).toBeGreaterThanOrEqual(2);
+      expect(claim.evidenceRequirements.some((item) => item.status === "received")).toBe(true);
+
+      for (const item of claim.evidenceRequirements) {
+        expect(item.label.length).toBeGreaterThan(10);
+        expect(validRequirementStatuses.has(item.status)).toBe(true);
+        expect(validOwnerRoles.has(item.ownerRole)).toBe(true);
+
+        if (item.status !== "received") {
+          expect(item.dueAt).toBeDefined();
+          expect(Number.isNaN(Date.parse(item.dueAt ?? ""))).toBe(false);
+        }
+      }
+
+      if (claim.documentStatus === "complete") {
+        expect(claim.evidenceRequirements.every((item) => item.status === "received")).toBe(true);
+      }
+    }
+  });
+
+  it("keeps unresolved evidence requirements in the right owner lane", () => {
+    const reviewerRoles = new Set(["adjuster", "supervisor", "legal"]);
+
+    for (const claim of demoClaims.filter((c) => c.documentStatus !== "complete")) {
+      const unresolved = claim.evidenceRequirements.filter((item) => item.status !== "received");
+      expect(unresolved.length).toBeGreaterThan(0);
+
+      for (const item of unresolved) {
+        const lastUpdated = Date.parse(claim.lastUpdated);
+        const dueAt = Date.parse(item.dueAt ?? "");
+        expect(dueAt).toBeGreaterThan(lastUpdated);
+        expect(dueAt - lastUpdated).toBeLessThanOrEqual(5 * 24 * 60 * 60 * 1000);
+      }
+
+      if (claim.documentStatus === "pending_third_party") {
+        expect(
+          unresolved.some(
+            (item) => item.status === "pending_third_party" && item.ownerRole === "third_party",
+          ),
+        ).toBe(true);
+      }
+
+      if (claim.documentStatus === "pending_customer") {
+        expect(
+          unresolved.some(
+            (item) => item.status === "pending_customer" && item.ownerRole === "customer",
+          ),
+        ).toBe(true);
+      }
+
+      if (claim.documentStatus === "needs_review") {
+        expect(
+          unresolved.some(
+            (item) => item.status === "needs_adjuster_review" && reviewerRoles.has(item.ownerRole),
+          ),
+        ).toBe(true);
+      }
+    }
+  });
+
   it("routes denied or adverse claim recommendations through human review", () => {
     const elevatedReviewGates = new Set(["supervisor_review", "legal_review"]);
     for (const claim of demoClaims.filter((c) => c.status === "denied" || c.adverseActionNoticeRequired)) {

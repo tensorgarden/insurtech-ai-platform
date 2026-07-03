@@ -36,6 +36,19 @@ export type ClaimEvidenceSource =
   | "medical_bill"
   | "customer_statement";
 
+export type ClaimEvidenceRequirementStatus =
+  | "received"
+  | "pending_customer"
+  | "pending_third_party"
+  | "needs_adjuster_review";
+
+export interface ClaimEvidenceRequirement {
+  label: string;
+  status: ClaimEvidenceRequirementStatus;
+  ownerRole: ClaimGovernanceOwnerRole;
+  dueAt?: string;
+}
+
 export type CustomerTier = "platinum" | "gold" | "silver" | "standard";
 
 export type RiskLevel = "low" | "moderate" | "elevated" | "high";
@@ -91,6 +104,7 @@ export interface Claim {
   governanceCheckpoint: ClaimGovernanceCheckpoint;
   aiDecisionRationale: string;
   evidenceAnchors: ClaimEvidenceAnchor[];
+  evidenceRequirements: ClaimEvidenceRequirement[];
   aiFraudScore: number;
   adjuster: string;
   notes: string;

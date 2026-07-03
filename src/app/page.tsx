@@ -298,6 +298,18 @@ function ClaimCard({ claim }: { claim: Claim }) {
   const triageSignalsLabel = claim.triageSignals
     .map((signal) => signal.split("_").join(" "))
     .join(", ");
+  const pendingEvidenceRequirements = claim.evidenceRequirements.filter(
+    (item) => item.status !== "received",
+  );
+  const evidenceRequirementTone: Record<
+    Claim["evidenceRequirements"][number]["status"],
+    "green" | "amber" | "purple"
+  > = {
+    received: "green",
+    pending_customer: "amber",
+    pending_third_party: "amber",
+    needs_adjuster_review: "purple",
+  };
 
   const typeLabel: Record<string, string> = {
     auto_collision: "Auto Collision",
@@ -380,6 +392,40 @@ function ClaimCard({ claim }: { claim: Claim }) {
           {claim.evidenceAnchors.length} evidence anchors -- triage signals: {triageSignalsLabel}
           {" -- "}
           {claim.adverseActionNoticeRequired ? "adverse notice required" : "no adverse notice"}
+        </div>
+        <div className="mt-2 rounded-md bg-white/70 p-2">
+          <div className="font-semibold text-slate-700">Required evidence checklist</div>
+          <ul className="mt-1 space-y-1">
+            {claim.evidenceRequirements.map((item) => (
+              <li
+                key={`${claim.id}-${item.label}`}
+                className="flex flex-wrap items-center justify-between gap-2 text-slate-500"
+              >
+                <span>{item.label}</span>
+                <span className="flex items-center gap-1">
+                  <Badge tone={evidenceRequirementTone[item.status]}>
+                    {item.status.split("_").join(" ")}
+                  </Badge>
+                  {item.dueAt && (
+                    <span className="text-slate-400">
+                      due{" "}
+                      {new Date(item.dueAt).toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                      })}
+                    </span>
+                  )}
+                </span>
+              </li>
+            ))}
+          </ul>
+          {pendingEvidenceRequirements.length > 0 && (
+            <p className="mt-1 text-[11px] font-medium text-amber-700">
+              {pendingEvidenceRequirements.length} unresolved evidence item
+              {pendingEvidenceRequirements.length === 1 ? "" : "s"} must clear before
+              adjuster-ready payout review.
+            </p>
+          )}
         </div>
         <div className="mt-2 rounded-md bg-white/70 p-2">
           <div className="font-semibold text-slate-700">Governance checkpoint</div>
