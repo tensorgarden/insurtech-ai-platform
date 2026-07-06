@@ -319,6 +319,13 @@ export const demoClaims: Claim[] = [
       dueAt: "2026-06-09T17:00:00Z",
       nextAction: "Confirm liability decision and customer estimate match before first payout recommendation.",
     },
+    communicationCheckpoint: {
+      audience: "customer",
+      status: "scheduled",
+      lastSentAt: "2026-06-08T10:05:00Z",
+      nextDueAt: "2026-06-09T13:00:00Z",
+      message: "Customer gets a next-day liability status update after the adjuster confirms the police citation and repair estimate alignment.",
+    },
     aiDecisionRationale: "Low fraud score with aligned dashcam and police details; adjuster verifies liability before payout recommendation.",
     evidenceAnchors: [
       { label: "Dashcam stills from insured vehicle", sourceType: "photos", receivedAt: "2026-06-08T09:45:00Z" },
@@ -356,6 +363,13 @@ export const demoClaims: Claim[] = [
       ownerRole: "third_party",
       dueAt: "2026-06-10T17:00:00Z",
       nextAction: "Collect the pending restoration estimate and reconcile fire department findings with the reserve before settlement review.",
+    },
+    communicationCheckpoint: {
+      audience: "third_party",
+      status: "waiting_on_response",
+      lastSentAt: "2026-06-07T11:20:00Z",
+      nextDueAt: "2026-06-10T11:00:00Z",
+      message: "Restoration vendor follow-up is tracked separately so the customer is not recontacted for a third-party estimate blocker.",
     },
     aiDecisionRationale: "Large-loss fire claim remains pending until third-party restoration estimate and fire department findings reconcile with the reserve.",
     evidenceAnchors: [
@@ -405,6 +419,12 @@ export const demoClaims: Claim[] = [
       dueAt: "2026-06-02T17:00:00Z",
       nextAction: "Send payout confirmation and close the evidence packet after the recovery window expires.",
     },
+    communicationCheckpoint: {
+      audience: "customer",
+      status: "sent",
+      lastSentAt: "2026-06-01T17:05:00Z",
+      message: "Customer payout confirmation was sent after the recovery window closed and the evidence packet was archived.",
+    },
     aiDecisionRationale: "Theft payout cleared after police report, policy status, and recovery attempts support the covered loss amount.",
     evidenceAnchors: [
       { label: "Vehicle theft police report", sourceType: "police_report", receivedAt: "2026-04-30T13:05:00Z" },
@@ -442,6 +462,12 @@ export const demoClaims: Claim[] = [
       ownerRole: "legal",
       dueAt: "2026-05-17T17:00:00Z",
       nextAction: "File the premises-safety follow-up note against the liability loss-control record.",
+    },
+    communicationCheckpoint: {
+      audience: "customer",
+      status: "sent",
+      lastSentAt: "2026-05-10T15:30:00Z",
+      message: "Settlement closure notice was sent after legal confirmed premises-safety follow-up was filed.",
     },
     aiDecisionRationale: "Liability settlement required legal review because medical bills and premises inspection findings drove the payout recommendation.",
     evidenceAnchors: [
@@ -481,6 +507,12 @@ export const demoClaims: Claim[] = [
       dueAt: "2026-04-16T17:00:00Z",
       nextAction: "Archive police report and item-photo evidence with the scheduled-property settlement worksheet.",
     },
+    communicationCheckpoint: {
+      audience: "customer",
+      status: "sent",
+      lastSentAt: "2026-04-15T10:45:00Z",
+      message: "Customer settlement update was sent with the scheduled-property worksheet archived for claim history visibility.",
+    },
     aiDecisionRationale: "Home theft claim paid after police report and item photos supported the scheduled personal-property loss.",
     evidenceAnchors: [
       { label: "Police burglary report", sourceType: "police_report", receivedAt: "2026-03-03T08:30:00Z" },
@@ -518,6 +550,13 @@ export const demoClaims: Claim[] = [
       ownerRole: "supervisor",
       dueAt: "2026-03-02T17:00:00Z",
       nextAction: "Supervisor validates adverse-action notice language against policy-lapse evidence before customer notice.",
+    },
+    communicationCheckpoint: {
+      audience: "customer",
+      status: "scheduled",
+      lastSentAt: "2026-02-28T09:00:00Z",
+      nextDueAt: "2026-03-02T17:30:00Z",
+      message: "Customer notice remains scheduled until supervisor validates policy-lapse evidence and adverse-action language.",
     },
     aiDecisionRationale: "Potential adverse claim decision is routed to supervisor review because policy records show a coverage gap and statements conflict.",
     evidenceAnchors: [

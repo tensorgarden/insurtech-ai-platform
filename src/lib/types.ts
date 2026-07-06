@@ -82,6 +82,18 @@ export interface ClaimGovernanceCheckpoint {
   nextAction: string;
 }
 
+export type ClaimCommunicationAudience = "customer" | "third_party" | "internal";
+
+export type ClaimCommunicationStatus = "sent" | "scheduled" | "waiting_on_response" | "not_required";
+
+export interface ClaimCommunicationCheckpoint {
+  audience: ClaimCommunicationAudience;
+  status: ClaimCommunicationStatus;
+  lastSentAt?: string;
+  nextDueAt?: string;
+  message: string;
+}
+
 export interface Claim {
   id: string;
   claimNumber: string;
@@ -102,6 +114,7 @@ export interface Claim {
   triageSignals: ClaimTriageSignal[];
   adverseActionNoticeRequired: boolean;
   governanceCheckpoint: ClaimGovernanceCheckpoint;
+  communicationCheckpoint: ClaimCommunicationCheckpoint;
   aiDecisionRationale: string;
   evidenceAnchors: ClaimEvidenceAnchor[];
   evidenceRequirements: ClaimEvidenceRequirement[];

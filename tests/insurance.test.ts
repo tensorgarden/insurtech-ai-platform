@@ -249,6 +249,38 @@ describe("InsurTech AI Platform -- demo data integrity", () => {
     }
   });
 
+  it("keeps customer and third-party communication checkpoints current", () => {
+    const validAudiences = new Set(["customer", "third_party", "internal"]);
+    const validStatuses = new Set(["sent", "scheduled", "waiting_on_response", "not_required"]);
+
+    expect(demoClaims.some((c) => c.communicationCheckpoint.audience === "third_party")).toBe(true);
+
+    for (const claim of demoClaims) {
+      const checkpoint = claim.communicationCheckpoint;
+      expect(validAudiences.has(checkpoint.audience)).toBe(true);
+      expect(validStatuses.has(checkpoint.status)).toBe(true);
+      expect(checkpoint.message.length).toBeGreaterThan(40);
+
+      if (checkpoint.lastSentAt) {
+        expect(Number.isNaN(Date.parse(checkpoint.lastSentAt))).toBe(false);
+      }
+
+      if (["new", "under_review"].includes(claim.status)) {
+        expect(checkpoint.nextDueAt).toBeDefined();
+        const lastUpdated = Date.parse(claim.lastUpdated);
+        const nextDueAt = Date.parse(checkpoint.nextDueAt ?? "");
+        expect(nextDueAt).toBeGreaterThan(lastUpdated);
+        expect(nextDueAt - lastUpdated).toBeLessThanOrEqual(3 * 24 * 60 * 60 * 1000);
+      }
+
+      if (claim.documentStatus === "pending_third_party") {
+        expect(checkpoint.audience).toBe("third_party");
+        expect(checkpoint.status).toBe("waiting_on_response");
+        expect(checkpoint.message).toMatch(/third-party|vendor|estimate|blocker/i);
+      }
+    }
+  });
+
   it("policy premium values are internally consistent", () => {
     for (const policy of demoPolicies) {
       expect(policy.annualPremium).toBe(policy.monthlyPremium * 12);

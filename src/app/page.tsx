@@ -310,6 +310,15 @@ function ClaimCard({ claim }: { claim: Claim }) {
     pending_third_party: "amber",
     needs_adjuster_review: "purple",
   };
+  const communicationTone: Record<
+    Claim["communicationCheckpoint"]["status"],
+    "green" | "amber" | "blue" | "slate"
+  > = {
+    sent: "green",
+    scheduled: "blue",
+    waiting_on_response: "amber",
+    not_required: "slate",
+  };
 
   const typeLabel: Record<string, string> = {
     auto_collision: "Auto Collision",
@@ -436,6 +445,25 @@ function ClaimCard({ claim }: { claim: Claim }) {
               month: "short",
               day: "numeric",
             })}
+          </div>
+        </div>
+        <div className="mt-2 rounded-md bg-white/70 p-2">
+          <div className="font-semibold text-slate-700">Communication checkpoint</div>
+          <p className="mt-1 text-slate-500">{claim.communicationCheckpoint.message}</p>
+          <div className="mt-1 flex flex-wrap items-center gap-2 text-slate-400">
+            <span>Audience: {claim.communicationCheckpoint.audience.split("_").join(" ")}</span>
+            <Badge tone={communicationTone[claim.communicationCheckpoint.status]}>
+              {claim.communicationCheckpoint.status.split("_").join(" ")}
+            </Badge>
+            {claim.communicationCheckpoint.nextDueAt && (
+              <span>
+                next update {" "}
+                {new Date(claim.communicationCheckpoint.nextDueAt).toLocaleDateString("en-US", {
+                  month: "short",
+                  day: "numeric",
+                })}
+              </span>
+            )}
           </div>
         </div>
       </div>
