@@ -281,6 +281,51 @@ describe("InsurTech AI Platform -- demo data integrity", () => {
     }
   });
 
+  it("spells out human escalation before automated claim recommendations are trusted", () => {
+    const escalationSignals = new Set([
+      "large_loss",
+      "high_fraud_score",
+      "coverage_dispute",
+      "legal_exposure",
+      "adverse_action_risk",
+      "liability_review",
+    ]);
+    const accountableOwnerRoles = new Set(["adjuster", "supervisor", "legal", "third_party"]);
+    const thresholdClaims = demoClaims.filter((claim) =>
+      claim.triageSignals.some((signal) => escalationSignals.has(signal)) ||
+      claim.aiFraudScore >= 70 ||
+      claim.amount >= 80000,
+    );
+
+    expect(thresholdClaims.length).toBeGreaterThan(0);
+
+    for (const claim of thresholdClaims) {
+      const reviewPacket = `${claim.governanceCheckpoint.nextAction} ${claim.aiDecisionRationale}`;
+      expect(claim.reviewGate).not.toBe("auto_clear");
+      expect(accountableOwnerRoles.has(claim.governanceCheckpoint.ownerRole)).toBe(true);
+      expect(reviewPacket).toMatch(
+        /adjuster|supervisor|legal|review|confirm|validate|reconcile|settlement|liability|policy/i,
+      );
+      expect(claim.communicationCheckpoint.status).not.toBe("not_required");
+    }
+  });
+
+  it("keeps adverse customer notices behind reviewer validation", () => {
+    const adverseClaims = demoClaims.filter((claim) => claim.adverseActionNoticeRequired);
+
+    expect(adverseClaims.length).toBeGreaterThan(0);
+
+    for (const claim of adverseClaims) {
+      expect(["supervisor", "legal"]).toContain(claim.governanceCheckpoint.ownerRole);
+      expect(claim.communicationCheckpoint.audience).toBe("customer");
+      expect(claim.communicationCheckpoint.status).toBe("scheduled");
+      expect(claim.communicationCheckpoint.message).toMatch(/supervisor|legal|validates|notice/i);
+      expect(Date.parse(claim.communicationCheckpoint.nextDueAt ?? "")).toBeGreaterThanOrEqual(
+        Date.parse(claim.governanceCheckpoint.dueAt),
+      );
+    }
+  });
+
   it("policy premium values are internally consistent", () => {
     for (const policy of demoPolicies) {
       expect(policy.annualPremium).toBe(policy.monthlyPremium * 12);
