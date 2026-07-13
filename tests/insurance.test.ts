@@ -326,6 +326,49 @@ describe("InsurTech AI Platform -- demo data integrity", () => {
     }
   });
 
+  it("keeps a jurisdiction-aware compliance diary on every claim", () => {
+    const validObligations = new Set([
+      "claim_acknowledgment",
+      "status_update",
+      "decision_notice",
+      "settlement_payment",
+    ]);
+    const validStatuses = new Set(["met", "due", "at_risk"]);
+    const customerStates = new Map(demoCustomers.map((customer) => [customer.id, customer.state]));
+
+    for (const claim of demoClaims) {
+      const checkpoint = claim.complianceCheckpoint;
+      expect(checkpoint.jurisdiction).toBe(customerStates.get(claim.customerId));
+      expect(validObligations.has(checkpoint.obligation)).toBe(true);
+      expect(validStatuses.has(checkpoint.status)).toBe(true);
+      expect(Number.isNaN(Date.parse(checkpoint.dueAt))).toBe(false);
+      expect(checkpoint.ruleReference).toMatch(/carrier-configured.+diary/i);
+
+      if (checkpoint.status === "met") {
+        expect(checkpoint.completedAt).toBeDefined();
+        expect(Date.parse(checkpoint.completedAt ?? "")).toBeLessThanOrEqual(
+          Date.parse(checkpoint.dueAt),
+        );
+      } else {
+        expect(checkpoint.completedAt).toBeUndefined();
+        expect(Date.parse(checkpoint.dueAt)).toBeGreaterThan(Date.parse(claim.lastUpdated));
+      }
+    }
+  });
+
+  it("does not mark open or adverse-action compliance obligations complete", () => {
+    for (const claim of demoClaims.filter(
+      (item) => ["new", "under_review"].includes(item.status) || item.adverseActionNoticeRequired,
+    )) {
+      expect(claim.complianceCheckpoint.status).not.toBe("met");
+    }
+
+    for (const claim of demoClaims.filter((item) => item.adverseActionNoticeRequired)) {
+      expect(claim.complianceCheckpoint.obligation).toBe("decision_notice");
+      expect(claim.communicationCheckpoint.status).toBe("scheduled");
+    }
+  });
+
   it("policy premium values are internally consistent", () => {
     for (const policy of demoPolicies) {
       expect(policy.annualPremium).toBe(policy.monthlyPremium * 12);

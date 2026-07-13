@@ -94,6 +94,23 @@ export interface ClaimCommunicationCheckpoint {
   message: string;
 }
 
+export type ClaimComplianceObligation =
+  | "claim_acknowledgment"
+  | "status_update"
+  | "decision_notice"
+  | "settlement_payment";
+
+export type ClaimComplianceStatus = "met" | "due" | "at_risk";
+
+export interface ClaimComplianceCheckpoint {
+  jurisdiction: string;
+  obligation: ClaimComplianceObligation;
+  status: ClaimComplianceStatus;
+  dueAt: string;
+  completedAt?: string;
+  ruleReference: string;
+}
+
 export interface Claim {
   id: string;
   claimNumber: string;
@@ -115,6 +132,7 @@ export interface Claim {
   adverseActionNoticeRequired: boolean;
   governanceCheckpoint: ClaimGovernanceCheckpoint;
   communicationCheckpoint: ClaimCommunicationCheckpoint;
+  complianceCheckpoint: ClaimComplianceCheckpoint;
   aiDecisionRationale: string;
   evidenceAnchors: ClaimEvidenceAnchor[];
   evidenceRequirements: ClaimEvidenceRequirement[];

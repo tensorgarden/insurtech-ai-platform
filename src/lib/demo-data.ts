@@ -326,6 +326,13 @@ export const demoClaims: Claim[] = [
       nextDueAt: "2026-06-09T13:00:00Z",
       message: "Customer gets a next-day liability status update after the adjuster confirms the police citation and repair estimate alignment.",
     },
+    complianceCheckpoint: {
+      jurisdiction: "IL",
+      obligation: "status_update",
+      status: "due",
+      dueAt: "2026-06-10T17:00:00Z",
+      ruleReference: "Carrier-configured Illinois claims communication diary",
+    },
     aiDecisionRationale: "Low fraud score with aligned dashcam and police details; adjuster verifies liability before payout recommendation.",
     evidenceAnchors: [
       { label: "Dashcam stills from insured vehicle", sourceType: "photos", receivedAt: "2026-06-08T09:45:00Z" },
@@ -370,6 +377,13 @@ export const demoClaims: Claim[] = [
       lastSentAt: "2026-06-07T11:20:00Z",
       nextDueAt: "2026-06-10T11:00:00Z",
       message: "Restoration vendor follow-up is tracked separately so the customer is not recontacted for a third-party estimate blocker.",
+    },
+    complianceCheckpoint: {
+      jurisdiction: "WA",
+      obligation: "status_update",
+      status: "at_risk",
+      dueAt: "2026-06-10T17:00:00Z",
+      ruleReference: "Carrier-configured Washington claims communication diary",
     },
     aiDecisionRationale: "Large-loss fire claim remains pending until third-party restoration estimate and fire department findings reconcile with the reserve.",
     evidenceAnchors: [
@@ -425,6 +439,13 @@ export const demoClaims: Claim[] = [
       lastSentAt: "2026-06-01T17:05:00Z",
       message: "Customer payout confirmation was sent after the recovery window closed and the evidence packet was archived.",
     },
+    complianceCheckpoint: {
+      jurisdiction: "CA",
+      obligation: "settlement_payment",
+      status: "due",
+      dueAt: "2026-06-04T17:00:00Z",
+      ruleReference: "Carrier-configured California settlement payment diary",
+    },
     aiDecisionRationale: "Theft payout cleared after police report, policy status, and recovery attempts support the covered loss amount.",
     evidenceAnchors: [
       { label: "Vehicle theft police report", sourceType: "police_report", receivedAt: "2026-04-30T13:05:00Z" },
@@ -468,6 +489,14 @@ export const demoClaims: Claim[] = [
       status: "sent",
       lastSentAt: "2026-05-10T15:30:00Z",
       message: "Settlement closure notice was sent after legal confirmed premises-safety follow-up was filed.",
+    },
+    complianceCheckpoint: {
+      jurisdiction: "TX",
+      obligation: "settlement_payment",
+      status: "met",
+      dueAt: "2026-05-12T17:00:00Z",
+      completedAt: "2026-05-10T14:00:00Z",
+      ruleReference: "Carrier-configured Texas settlement payment diary",
     },
     aiDecisionRationale: "Liability settlement required legal review because medical bills and premises inspection findings drove the payout recommendation.",
     evidenceAnchors: [
@@ -513,6 +542,14 @@ export const demoClaims: Claim[] = [
       lastSentAt: "2026-04-15T10:45:00Z",
       message: "Customer settlement update was sent with the scheduled-property worksheet archived for claim history visibility.",
     },
+    complianceCheckpoint: {
+      jurisdiction: "CA",
+      obligation: "settlement_payment",
+      status: "met",
+      dueAt: "2026-04-18T17:00:00Z",
+      completedAt: "2026-04-15T09:30:00Z",
+      ruleReference: "Carrier-configured California settlement payment diary",
+    },
     aiDecisionRationale: "Home theft claim paid after police report and item photos supported the scheduled personal-property loss.",
     evidenceAnchors: [
       { label: "Police burglary report", sourceType: "police_report", receivedAt: "2026-03-03T08:30:00Z" },
@@ -557,6 +594,13 @@ export const demoClaims: Claim[] = [
       lastSentAt: "2026-02-28T09:00:00Z",
       nextDueAt: "2026-03-02T17:30:00Z",
       message: "Customer notice remains scheduled until supervisor validates policy-lapse evidence and adverse-action language.",
+    },
+    complianceCheckpoint: {
+      jurisdiction: "CA",
+      obligation: "decision_notice",
+      status: "at_risk",
+      dueAt: "2026-03-02T18:00:00Z",
+      ruleReference: "Carrier-configured California coverage decision notice diary",
     },
     aiDecisionRationale: "Potential adverse claim decision is routed to supervisor review because policy records show a coverage gap and statements conflict.",
     evidenceAnchors: [

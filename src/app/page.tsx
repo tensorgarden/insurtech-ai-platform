@@ -319,6 +319,14 @@ function ClaimCard({ claim }: { claim: Claim }) {
     waiting_on_response: "amber",
     not_required: "slate",
   };
+  const complianceTone: Record<
+    Claim["complianceCheckpoint"]["status"],
+    "green" | "amber" | "red"
+  > = {
+    met: "green",
+    due: "amber",
+    at_risk: "red",
+  };
 
   const typeLabel: Record<string, string> = {
     auto_collision: "Auto Collision",
@@ -464,6 +472,29 @@ function ClaimCard({ claim }: { claim: Claim }) {
                 })}
               </span>
             )}
+          </div>
+        </div>
+        <div className="mt-2 rounded-md bg-white/70 p-2">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <div className="font-semibold text-slate-700">Compliance diary</div>
+            <Badge tone={complianceTone[claim.complianceCheckpoint.status]}>
+              {claim.complianceCheckpoint.status.split("_").join(" ")}
+            </Badge>
+          </div>
+          <p className="mt-1 text-slate-500">
+            {claim.complianceCheckpoint.jurisdiction} --{" "}
+            {claim.complianceCheckpoint.obligation.split("_").join(" ")}
+          </p>
+          <div className="mt-1 text-slate-400">
+            Due{" "}
+            <time dateTime={claim.complianceCheckpoint.dueAt}>
+              {new Date(claim.complianceCheckpoint.dueAt).toLocaleDateString("en-US", {
+                month: "short",
+                day: "numeric",
+              })}
+            </time>
+            {" -- "}
+            {claim.complianceCheckpoint.ruleReference}
           </div>
         </div>
       </div>
