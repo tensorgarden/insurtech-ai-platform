@@ -602,6 +602,14 @@ export const demoClaims: Claim[] = [
       dueAt: "2026-03-02T18:00:00Z",
       ruleReference: "Carrier-configured California coverage decision notice diary",
     },
+    claimantReviewCheckpoint: {
+      status: "pending_notice",
+      reviewerRole: "supervisor",
+      requestChannels: ["customer_portal", "claims_phone", "written_request"],
+      decisionBasisSummary:
+        "Policy-lapse timeline and statement variance require human reconsideration before any denial is upheld.",
+      ruleReference: "Carrier-configured California claim reconsideration workflow",
+    },
     aiDecisionRationale: "Potential adverse claim decision is routed to supervisor review because policy records show a coverage gap and statements conflict.",
     evidenceAnchors: [
       { label: "Policy lapse timeline", sourceType: "policy_record", receivedAt: "2026-02-10T08:05:00Z" },

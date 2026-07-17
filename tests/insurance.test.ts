@@ -326,6 +326,37 @@ describe("InsurTech AI Platform -- demo data integrity", () => {
     }
   });
 
+  it("keeps adverse decisions contestable through a named human review path", () => {
+    const adverseClaims = demoClaims.filter((claim) => claim.adverseActionNoticeRequired);
+
+    expect(adverseClaims.length).toBeGreaterThan(0);
+
+    for (const claim of adverseClaims) {
+      const checkpoint = claim.claimantReviewCheckpoint;
+      expect(checkpoint).toBeDefined();
+      expect(["supervisor", "legal"]).toContain(checkpoint?.reviewerRole);
+      expect(checkpoint?.requestChannels).toEqual(
+        expect.arrayContaining(["customer_portal", "claims_phone", "written_request"]),
+      );
+      expect(checkpoint?.decisionBasisSummary).toMatch(/policy|evidence|coverage|statement/i);
+      expect(checkpoint?.ruleReference).toMatch(/carrier-configured.+reconsideration workflow/i);
+    }
+
+    for (const claim of demoClaims.filter((item) => !item.adverseActionNoticeRequired)) {
+      expect(claim.claimantReviewCheckpoint).toBeUndefined();
+    }
+  });
+
+  it("does not start a claimant review deadline before the reviewed notice is sent", () => {
+    for (const claim of demoClaims.filter((item) => item.adverseActionNoticeRequired)) {
+      const checkpoint = claim.claimantReviewCheckpoint;
+      expect(checkpoint?.status).toBe("pending_notice");
+      expect(checkpoint?.requestBy).toBeUndefined();
+      expect(claim.communicationCheckpoint.status).toBe("scheduled");
+      expect(claim.complianceCheckpoint.obligation).toBe("decision_notice");
+    }
+  });
+
   it("keeps a jurisdiction-aware compliance diary on every claim", () => {
     const validObligations = new Set([
       "claim_acknowledgment",

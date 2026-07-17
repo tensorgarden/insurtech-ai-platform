@@ -111,6 +111,19 @@ export interface ClaimComplianceCheckpoint {
   ruleReference: string;
 }
 
+export type ClaimantReviewStatus = "pending_notice" | "available" | "requested" | "resolved";
+
+export type ClaimantReviewChannel = "customer_portal" | "claims_phone" | "written_request";
+
+export interface ClaimantReviewCheckpoint {
+  status: ClaimantReviewStatus;
+  reviewerRole: "supervisor" | "legal";
+  requestChannels: ClaimantReviewChannel[];
+  decisionBasisSummary: string;
+  requestBy?: string;
+  ruleReference: string;
+}
+
 export interface Claim {
   id: string;
   claimNumber: string;
@@ -133,6 +146,7 @@ export interface Claim {
   governanceCheckpoint: ClaimGovernanceCheckpoint;
   communicationCheckpoint: ClaimCommunicationCheckpoint;
   complianceCheckpoint: ClaimComplianceCheckpoint;
+  claimantReviewCheckpoint?: ClaimantReviewCheckpoint;
   aiDecisionRationale: string;
   evidenceAnchors: ClaimEvidenceAnchor[];
   evidenceRequirements: ClaimEvidenceRequirement[];

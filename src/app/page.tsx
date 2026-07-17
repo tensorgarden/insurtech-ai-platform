@@ -327,6 +327,12 @@ function ClaimCard({ claim }: { claim: Claim }) {
     due: "amber",
     at_risk: "red",
   };
+  const claimantReviewTone = {
+    pending_notice: "amber",
+    available: "blue",
+    requested: "purple",
+    resolved: "green",
+  } as const;
 
   const typeLabel: Record<string, string> = {
     auto_collision: "Auto Collision",
@@ -497,6 +503,42 @@ function ClaimCard({ claim }: { claim: Claim }) {
             {claim.complianceCheckpoint.ruleReference}
           </div>
         </div>
+        {claim.claimantReviewCheckpoint && (
+          <div className="mt-2 rounded-md border border-amber-100 bg-amber-50/70 p-2">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <div className="font-semibold text-slate-700">Claimant review path</div>
+              <Badge tone={claimantReviewTone[claim.claimantReviewCheckpoint.status]}>
+                {claim.claimantReviewCheckpoint.status.split("_").join(" ")}
+              </Badge>
+            </div>
+            <p className="mt-1 text-slate-600">
+              {claim.claimantReviewCheckpoint.decisionBasisSummary}
+            </p>
+            <div className="mt-1 text-slate-500">
+              Human reviewer: {claim.claimantReviewCheckpoint.reviewerRole} -- request via{" "}
+              {claim.claimantReviewCheckpoint.requestChannels
+                .map((channel) => channel.split("_").join(" "))
+                .join(", ")}
+            </div>
+            <div className="mt-1 text-slate-400">
+              {claim.claimantReviewCheckpoint.requestBy ? (
+                <>
+                  Request by{" "}
+                  <time dateTime={claim.claimantReviewCheckpoint.requestBy}>
+                    {new Date(claim.claimantReviewCheckpoint.requestBy).toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                    })}
+                  </time>
+                </>
+              ) : (
+                "Request deadline begins only after the reviewed notice is delivered."
+              )}
+              {" -- "}
+              {claim.claimantReviewCheckpoint.ruleReference}
+            </div>
+          </div>
+        )}
       </div>
       {claim.status === "denied" && (
         <p className="mt-2 text-xs text-red-600 bg-red-50 rounded-lg p-2">{claim.notes}</p>
