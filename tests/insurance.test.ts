@@ -281,6 +281,31 @@ describe("InsurTech AI Platform -- demo data integrity", () => {
     }
   });
 
+  it("uses each claimant's preferred channel for customer updates", () => {
+    const customerPreferences = new Map(
+      demoCustomers.map((customer) => [customer.id, customer.preferredCommunicationChannel]),
+    );
+    const validChannels = new Set(["email", "sms", "phone", "customer_portal", "vendor_portal"]);
+
+    expect(demoClaims.some((claim) => claim.communicationCheckpoint.channel === "sms")).toBe(true);
+    expect(
+      demoClaims.some((claim) => claim.communicationCheckpoint.channel === "customer_portal"),
+    ).toBe(true);
+
+    for (const claim of demoClaims) {
+      const checkpoint = claim.communicationCheckpoint;
+      expect(validChannels.has(checkpoint.channel)).toBe(true);
+
+      if (checkpoint.audience === "customer") {
+        expect(checkpoint.channel).toBe(customerPreferences.get(claim.customerId));
+      }
+
+      if (checkpoint.audience === "third_party") {
+        expect(checkpoint.channel).toBe("vendor_portal");
+      }
+    }
+  });
+
   it("spells out human escalation before automated claim recommendations are trusted", () => {
     const escalationSignals = new Set([
       "large_loss",

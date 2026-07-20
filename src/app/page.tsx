@@ -466,6 +466,7 @@ function ClaimCard({ claim }: { claim: Claim }) {
           <p className="mt-1 text-slate-500">{claim.communicationCheckpoint.message}</p>
           <div className="mt-1 flex flex-wrap items-center gap-2 text-slate-400">
             <span>Audience: {claim.communicationCheckpoint.audience.split("_").join(" ")}</span>
+            <span>Channel: {claim.communicationCheckpoint.channel.split("_").join(" ")}</span>
             <Badge tone={communicationTone[claim.communicationCheckpoint.status]}>
               {claim.communicationCheckpoint.status.split("_").join(" ")}
             </Badge>
@@ -594,7 +595,8 @@ function CustomerCard({ customer }: { customer: Customer }) {
         <Badge tone={tierTone[customer.tier] || "slate"}>{customer.tier}</Badge>
       </div>
       <div className="text-xs text-slate-500 mb-2">
-        {customer.city}, {customer.state}
+        {customer.city}, {customer.state} -- prefers{" "}
+        {customer.preferredCommunicationChannel.split("_").join(" ")}
       </div>
       <div className="grid grid-cols-3 gap-2 text-center">
         <div>

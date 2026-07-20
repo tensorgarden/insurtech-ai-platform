@@ -84,10 +84,15 @@ export interface ClaimGovernanceCheckpoint {
 
 export type ClaimCommunicationAudience = "customer" | "third_party" | "internal";
 
+export type CustomerCommunicationChannel = "email" | "sms" | "phone" | "customer_portal";
+
+export type ClaimCommunicationChannel = CustomerCommunicationChannel | "vendor_portal";
+
 export type ClaimCommunicationStatus = "sent" | "scheduled" | "waiting_on_response" | "not_required";
 
 export interface ClaimCommunicationCheckpoint {
   audience: ClaimCommunicationAudience;
+  channel: ClaimCommunicationChannel;
   status: ClaimCommunicationStatus;
   lastSentAt?: string;
   nextDueAt?: string;
@@ -163,6 +168,7 @@ export interface Customer {
   address: string;
   city: string;
   state: string;
+  preferredCommunicationChannel: CustomerCommunicationChannel;
   tier: CustomerTier;
   activePolicies: number;
   totalPremiumVolume: number;
