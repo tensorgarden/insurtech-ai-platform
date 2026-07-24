@@ -397,6 +397,18 @@ export const demoClaims: Claim[] = [
       dueAt: "2026-06-10T17:00:00Z",
       ruleReference: "Carrier-configured Washington claims communication diary",
     },
+    lossMitigationCheckpoint: {
+      status: "in_progress",
+      ownerRole: "third_party",
+      action:
+        "Maintain temporary weather protection, preserve pre-repair photos, and upload receipts before any permanent restoration begins.",
+      evidenceItems: [
+        { label: "Pre-repair damage photos", status: "received" },
+        { label: "Emergency tarping receipt", status: "pending" },
+      ],
+      inspectionStatus: "pending",
+      permanentRepairsAuthorized: false,
+    },
     aiDecisionRationale: "Large-loss fire claim remains pending until third-party restoration estimate and fire department findings reconcile with the reserve.",
     evidenceAnchors: [
       { label: "Fire department incident report", sourceType: "fire_report", receivedAt: "2026-05-23T10:20:00Z" },

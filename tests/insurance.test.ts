@@ -382,6 +382,42 @@ describe("InsurTech AI Platform -- demo data integrity", () => {
     }
   });
 
+  it("tracks temporary mitigation evidence on property-damage claims", () => {
+    const propertyDamageClaims = demoClaims.filter((claim) => claim.type === "home_fire");
+
+    expect(propertyDamageClaims.length).toBeGreaterThan(0);
+
+    for (const claim of propertyDamageClaims) {
+      const checkpoint = claim.lossMitigationCheckpoint;
+      expect(checkpoint).toBeDefined();
+      expect(["customer", "third_party", "adjuster"]).toContain(checkpoint?.ownerRole);
+      expect(checkpoint?.action).toMatch(/temporary|prevent|damage|repair|weather/i);
+      expect(checkpoint?.evidenceItems.some((item) => /photo/i.test(item.label))).toBe(true);
+      expect(checkpoint?.evidenceItems.some((item) => /receipt/i.test(item.label))).toBe(true);
+    }
+  });
+
+  it("keeps permanent repairs blocked until carrier inspection is complete", () => {
+    const mitigationCheckpoints = demoClaims.flatMap((claim) =>
+      claim.lossMitigationCheckpoint ? [claim.lossMitigationCheckpoint] : [],
+    );
+
+    expect(mitigationCheckpoints.some((checkpoint) => checkpoint.inspectionStatus === "pending")).toBe(
+      true,
+    );
+
+    for (const checkpoint of mitigationCheckpoints) {
+      if (checkpoint.inspectionStatus === "pending") {
+        expect(checkpoint.permanentRepairsAuthorized).toBe(false);
+      }
+
+      if (checkpoint.permanentRepairsAuthorized) {
+        expect(checkpoint.inspectionStatus).toBe("completed");
+        expect(checkpoint.evidenceItems.every((item) => item.status === "received")).toBe(true);
+      }
+    }
+  });
+
   it("keeps a jurisdiction-aware compliance diary on every claim", () => {
     const validObligations = new Set([
       "claim_acknowledgment",

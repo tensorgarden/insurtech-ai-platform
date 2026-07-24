@@ -333,6 +333,14 @@ function ClaimCard({ claim }: { claim: Claim }) {
     requested: "purple",
     resolved: "green",
   } as const;
+  const lossMitigationTone: Record<
+    NonNullable<Claim["lossMitigationCheckpoint"]>["status"],
+    "blue" | "amber" | "green"
+  > = {
+    required: "blue",
+    in_progress: "amber",
+    documented: "green",
+  };
 
   const typeLabel: Record<string, string> = {
     auto_collision: "Auto Collision",
@@ -450,6 +458,29 @@ function ClaimCard({ claim }: { claim: Claim }) {
             </p>
           )}
         </div>
+        {claim.lossMitigationCheckpoint && (
+          <div className="mt-2 rounded-md border border-blue-100 bg-blue-50/60 p-2">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <div className="font-semibold text-slate-700">Loss mitigation checkpoint</div>
+              <Badge tone={lossMitigationTone[claim.lossMitigationCheckpoint.status]}>
+                {claim.lossMitigationCheckpoint.status.split("_").join(" ")}
+              </Badge>
+            </div>
+            <p className="mt-1 text-slate-600">{claim.lossMitigationCheckpoint.action}</p>
+            <div className="mt-1 text-slate-500">
+              Owner: {claim.lossMitigationCheckpoint.ownerRole.split("_").join(" ")} -- inspection{" "}
+              {claim.lossMitigationCheckpoint.inspectionStatus} --{" "}
+              {claim.lossMitigationCheckpoint.permanentRepairsAuthorized
+                ? "permanent repairs cleared"
+                : "permanent repairs on hold"}
+            </div>
+            <div className="mt-1 text-slate-400">
+              Evidence: {claim.lossMitigationCheckpoint.evidenceItems
+                .map((item) => `${item.label} (${item.status})`)
+                .join(", ")}
+            </div>
+          </div>
+        )}
         <div className="mt-2 rounded-md bg-white/70 p-2">
           <div className="font-semibold text-slate-700">Governance checkpoint</div>
           <p className="mt-1 text-slate-500">{claim.governanceCheckpoint.nextAction}</p>

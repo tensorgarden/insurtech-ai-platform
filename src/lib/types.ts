@@ -129,6 +129,26 @@ export interface ClaimantReviewCheckpoint {
   ruleReference: string;
 }
 
+export type ClaimLossMitigationStatus = "required" | "in_progress" | "documented";
+
+export type ClaimPropertyInspectionStatus = "pending" | "completed";
+
+export type ClaimLossMitigationEvidenceStatus = "received" | "pending";
+
+export interface ClaimLossMitigationEvidenceItem {
+  label: string;
+  status: ClaimLossMitigationEvidenceStatus;
+}
+
+export interface ClaimLossMitigationCheckpoint {
+  status: ClaimLossMitigationStatus;
+  ownerRole: ClaimGovernanceOwnerRole;
+  action: string;
+  evidenceItems: ClaimLossMitigationEvidenceItem[];
+  inspectionStatus: ClaimPropertyInspectionStatus;
+  permanentRepairsAuthorized: boolean;
+}
+
 export interface Claim {
   id: string;
   claimNumber: string;
@@ -152,6 +172,7 @@ export interface Claim {
   communicationCheckpoint: ClaimCommunicationCheckpoint;
   complianceCheckpoint: ClaimComplianceCheckpoint;
   claimantReviewCheckpoint?: ClaimantReviewCheckpoint;
+  lossMitigationCheckpoint?: ClaimLossMitigationCheckpoint;
   aiDecisionRationale: string;
   evidenceAnchors: ClaimEvidenceAnchor[];
   evidenceRequirements: ClaimEvidenceRequirement[];
