@@ -146,6 +146,7 @@ export interface ClaimLossMitigationCheckpoint {
   action: string;
   evidenceItems: ClaimLossMitigationEvidenceItem[];
   inspectionStatus: ClaimPropertyInspectionStatus;
+  inspectionScheduledAt?: string;
   permanentRepairsAuthorized: boolean;
 }
 

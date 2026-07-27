@@ -418,6 +418,25 @@ describe("InsurTech AI Platform -- demo data integrity", () => {
     }
   });
 
+  it("gives pending property inspections a visible appointment before repairs can proceed", () => {
+    const pendingInspectionClaims = demoClaims.filter(
+      (claim) => claim.lossMitigationCheckpoint?.inspectionStatus === "pending",
+    );
+
+    expect(pendingInspectionClaims.length).toBeGreaterThan(0);
+
+    for (const claim of pendingInspectionClaims) {
+      const checkpoint = claim.lossMitigationCheckpoint;
+      expect(checkpoint?.inspectionScheduledAt).toBeDefined();
+      expect(Number.isNaN(Date.parse(checkpoint?.inspectionScheduledAt ?? ""))).toBe(false);
+      const appointmentAt = Date.parse(checkpoint?.inspectionScheduledAt ?? "");
+      const filedAt = Date.parse(claim.filedDate);
+      expect(appointmentAt).toBeGreaterThan(Date.parse(claim.lastUpdated));
+      expect(appointmentAt - filedAt).toBeLessThanOrEqual(30 * 24 * 60 * 60 * 1000);
+      expect(checkpoint?.permanentRepairsAuthorized).toBe(false);
+    }
+  });
+
   it("keeps a jurisdiction-aware compliance diary on every claim", () => {
     const validObligations = new Set([
       "claim_acknowledgment",

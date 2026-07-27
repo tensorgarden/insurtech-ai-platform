@@ -473,6 +473,19 @@ function ClaimCard({ claim }: { claim: Claim }) {
               {claim.lossMitigationCheckpoint.permanentRepairsAuthorized
                 ? "permanent repairs cleared"
                 : "permanent repairs on hold"}
+              {claim.lossMitigationCheckpoint.inspectionScheduledAt && (
+                <>
+                  {" -- appointment "}
+                  <time dateTime={claim.lossMitigationCheckpoint.inspectionScheduledAt}>
+                    {new Date(
+                      claim.lossMitigationCheckpoint.inspectionScheduledAt,
+                    ).toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                    })}
+                  </time>
+                </>
+              )}
             </div>
             <div className="mt-1 text-slate-400">
               Evidence: {claim.lossMitigationCheckpoint.evidenceItems

@@ -407,6 +407,7 @@ export const demoClaims: Claim[] = [
         { label: "Emergency tarping receipt", status: "pending" },
       ],
       inspectionStatus: "pending",
+      inspectionScheduledAt: "2026-06-09T15:00:00Z",
       permanentRepairsAuthorized: false,
     },
     aiDecisionRationale: "Large-loss fire claim remains pending until third-party restoration estimate and fire department findings reconcile with the reserve.",
