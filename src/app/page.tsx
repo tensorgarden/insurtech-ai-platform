@@ -341,6 +341,14 @@ function ClaimCard({ claim }: { claim: Claim }) {
     in_progress: "amber",
     documented: "green",
   };
+  const additionalLivingExpenseTone: Record<
+    NonNullable<Claim["additionalLivingExpenseCheckpoint"]>["status"],
+    "amber" | "blue" | "green"
+  > = {
+    collecting_receipts: "amber",
+    ready_for_review: "blue",
+    reimbursed: "green",
+  };
 
   const typeLabel: Record<string, string> = {
     auto_collision: "Auto Collision",
@@ -350,6 +358,15 @@ function ClaimCard({ claim }: { claim: Claim }) {
     life_payout: "Life Payout",
     commercial_liability: "Commercial Liability",
   };
+  const submittedLivingExpenseIncrease =
+    claim.additionalLivingExpenseCheckpoint?.items.reduce(
+      (total, item) => total + item.eligibleIncrease,
+      0,
+    ) ?? 0;
+  const remainingLivingExpenseLimit = claim.additionalLivingExpenseCheckpoint
+    ? claim.additionalLivingExpenseCheckpoint.policyLimit -
+      claim.additionalLivingExpenseCheckpoint.reimbursedAmount
+    : 0;
 
   return (
     <div className="rounded-xl border bg-white/80 p-4 border-l-4 border-l-slate-300">
@@ -492,6 +509,44 @@ function ClaimCard({ claim }: { claim: Claim }) {
                 .map((item) => `${item.label} (${item.status})`)
                 .join(", ")}
             </div>
+          </div>
+        )}
+        {claim.additionalLivingExpenseCheckpoint && (
+          <div className="mt-2 rounded-md border border-indigo-100 bg-indigo-50/60 p-2">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <div className="font-semibold text-slate-700">Additional living expenses</div>
+              <Badge
+                tone={additionalLivingExpenseTone[claim.additionalLivingExpenseCheckpoint.status]}
+              >
+                {claim.additionalLivingExpenseCheckpoint.status.split("_").join(" ")}
+              </Badge>
+            </div>
+            <p className="mt-1 text-slate-600">
+              {claim.additionalLivingExpenseCheckpoint.action}
+            </p>
+            <div className="mt-1 text-slate-500">
+              Reimbursed {formatCurrency(claim.additionalLivingExpenseCheckpoint.reimbursedAmount)} of{" "}
+              {formatCurrency(claim.additionalLivingExpenseCheckpoint.policyLimit)} policy limit --{" "}
+              {formatCurrency(remainingLivingExpenseLimit)} remaining
+            </div>
+            <div className="mt-1 text-slate-400">
+              Submitted eligible increase: {formatCurrency(submittedLivingExpenseIncrease)} -- next review{" "}
+              <time dateTime={claim.additionalLivingExpenseCheckpoint.nextReviewAt}>
+                {new Date(claim.additionalLivingExpenseCheckpoint.nextReviewAt).toLocaleDateString(
+                  "en-US",
+                  { month: "short", day: "numeric" },
+                )}
+              </time>
+            </div>
+            <ul className="mt-1 space-y-1 text-slate-400">
+              {claim.additionalLivingExpenseCheckpoint.items.map((item) => (
+                <li key={`${claim.id}-${item.label}`}>
+                  {item.label}: {formatCurrency(item.claimedAmount)} submitted minus{" "}
+                  {formatCurrency(item.normalExpenseBaseline)} normal baseline ={" "}
+                  {formatCurrency(item.eligibleIncrease)} increase ({item.receiptStatus} receipt)
+                </li>
+              ))}
+            </ul>
           </div>
         )}
         <div className="mt-2 rounded-md bg-white/70 p-2">

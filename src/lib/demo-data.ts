@@ -410,6 +410,31 @@ export const demoClaims: Claim[] = [
       inspectionScheduledAt: "2026-06-09T15:00:00Z",
       permanentRepairsAuthorized: false,
     },
+    additionalLivingExpenseCheckpoint: {
+      status: "collecting_receipts",
+      ownerRole: "adjuster",
+      policyLimit: 24000,
+      reimbursedAmount: 2500,
+      nextReviewAt: "2026-06-10T15:00:00Z",
+      action:
+        "Collect the pending meal receipts and verify only temporary costs above normal living expenses before the next reimbursement.",
+      items: [
+        {
+          label: "Temporary hotel stay",
+          claimedAmount: 4600,
+          normalExpenseBaseline: 2100,
+          eligibleIncrease: 2500,
+          receiptStatus: "received",
+        },
+        {
+          label: "Meals without kitchen access",
+          claimedAmount: 1200,
+          normalExpenseBaseline: 760,
+          eligibleIncrease: 440,
+          receiptStatus: "pending",
+        },
+      ],
+    },
     aiDecisionRationale: "Large-loss fire claim remains pending until third-party restoration estimate and fire department findings reconcile with the reserve.",
     evidenceAnchors: [
       { label: "Fire department incident report", sourceType: "fire_report", receivedAt: "2026-05-23T10:20:00Z" },

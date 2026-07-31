@@ -150,6 +150,31 @@ export interface ClaimLossMitigationCheckpoint {
   permanentRepairsAuthorized: boolean;
 }
 
+export type ClaimAdditionalLivingExpenseStatus =
+  | "collecting_receipts"
+  | "ready_for_review"
+  | "reimbursed";
+
+export type ClaimAdditionalLivingExpenseReceiptStatus = "received" | "pending";
+
+export interface ClaimAdditionalLivingExpenseItem {
+  label: string;
+  claimedAmount: number;
+  normalExpenseBaseline: number;
+  eligibleIncrease: number;
+  receiptStatus: ClaimAdditionalLivingExpenseReceiptStatus;
+}
+
+export interface ClaimAdditionalLivingExpenseCheckpoint {
+  status: ClaimAdditionalLivingExpenseStatus;
+  ownerRole: ClaimGovernanceOwnerRole;
+  policyLimit: number;
+  reimbursedAmount: number;
+  nextReviewAt: string;
+  action: string;
+  items: ClaimAdditionalLivingExpenseItem[];
+}
+
 export interface Claim {
   id: string;
   claimNumber: string;
@@ -174,6 +199,7 @@ export interface Claim {
   complianceCheckpoint: ClaimComplianceCheckpoint;
   claimantReviewCheckpoint?: ClaimantReviewCheckpoint;
   lossMitigationCheckpoint?: ClaimLossMitigationCheckpoint;
+  additionalLivingExpenseCheckpoint?: ClaimAdditionalLivingExpenseCheckpoint;
   aiDecisionRationale: string;
   evidenceAnchors: ClaimEvidenceAnchor[];
   evidenceRequirements: ClaimEvidenceRequirement[];

@@ -437,6 +437,55 @@ describe("InsurTech AI Platform -- demo data integrity", () => {
     }
   });
 
+  it("tracks additional living expenses under a separate policy limit", () => {
+    const displacedPropertyClaims = demoClaims.filter(
+      (claim) => claim.additionalLivingExpenseCheckpoint,
+    );
+
+    expect(displacedPropertyClaims.length).toBeGreaterThan(0);
+
+    for (const claim of displacedPropertyClaims) {
+      const checkpoint = claim.additionalLivingExpenseCheckpoint;
+      expect(claim.type).toBe("home_fire");
+      expect(checkpoint?.policyLimit).toBeGreaterThan(0);
+      expect(checkpoint?.policyLimit).not.toBe(claim.amount);
+      expect(checkpoint?.items.length).toBeGreaterThanOrEqual(2);
+      expect(Number.isNaN(Date.parse(checkpoint?.nextReviewAt ?? ""))).toBe(false);
+      expect(checkpoint?.action).toMatch(/receipt|temporary|normal living expenses|reimbursement/i);
+    }
+  });
+
+  it("reimburses only receipt-backed increases above normal living expenses", () => {
+    const checkpoints = demoClaims.flatMap((claim) =>
+      claim.additionalLivingExpenseCheckpoint ? [claim.additionalLivingExpenseCheckpoint] : [],
+    );
+
+    expect(
+      checkpoints.some((checkpoint) =>
+        checkpoint.items.some((item) => item.receiptStatus === "pending"),
+      ),
+    ).toBe(true);
+
+    for (const checkpoint of checkpoints) {
+      for (const item of checkpoint.items) {
+        expect(item.eligibleIncrease).toBe(
+          Math.max(item.claimedAmount - item.normalExpenseBaseline, 0),
+        );
+      }
+
+      const receiptBackedIncrease = checkpoint.items
+        .filter((item) => item.receiptStatus === "received")
+        .reduce((total, item) => total + item.eligibleIncrease, 0);
+      const hasPendingReceipt = checkpoint.items.some((item) => item.receiptStatus === "pending");
+
+      expect(checkpoint.reimbursedAmount).toBeLessThanOrEqual(receiptBackedIncrease);
+      expect(checkpoint.reimbursedAmount).toBeLessThanOrEqual(checkpoint.policyLimit);
+      if (hasPendingReceipt) {
+        expect(checkpoint.status).toBe("collecting_receipts");
+      }
+    }
+  });
+
   it("keeps a jurisdiction-aware compliance diary on every claim", () => {
     const validObligations = new Set([
       "claim_acknowledgment",
