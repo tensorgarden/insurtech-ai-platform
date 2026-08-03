@@ -492,7 +492,9 @@ function ClaimCard({ claim }: { claim: Claim }) {
                 : "permanent repairs on hold"}
               {claim.lossMitigationCheckpoint.inspectionScheduledAt && (
                 <>
-                  {" -- appointment "}
+                  {claim.lossMitigationCheckpoint.inspectionStatus === "scoped"
+                    ? " -- follow-up appointment "
+                    : " -- appointment "}
                   <time dateTime={claim.lossMitigationCheckpoint.inspectionScheduledAt}>
                     {new Date(
                       claim.lossMitigationCheckpoint.inspectionScheduledAt,

@@ -131,7 +131,7 @@ export interface ClaimantReviewCheckpoint {
 
 export type ClaimLossMitigationStatus = "required" | "in_progress" | "documented";
 
-export type ClaimPropertyInspectionStatus = "pending" | "completed";
+export type ClaimPropertyInspectionStatus = "pending" | "scoped" | "completed";
 
 export type ClaimLossMitigationEvidenceStatus = "received" | "pending";
 

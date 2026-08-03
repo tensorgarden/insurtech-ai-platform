@@ -401,12 +401,12 @@ export const demoClaims: Claim[] = [
       status: "in_progress",
       ownerRole: "third_party",
       action:
-        "Maintain temporary weather protection, preserve pre-repair photos, and upload receipts before any permanent restoration begins.",
+        "Maintain temporary weather protection and complete the follow-up inspection after the initial scope could not document hidden damage.",
       evidenceItems: [
         { label: "Pre-repair damage photos", status: "received" },
         { label: "Emergency tarping receipt", status: "pending" },
       ],
-      inspectionStatus: "pending",
+      inspectionStatus: "scoped",
       inspectionScheduledAt: "2026-06-09T15:00:00Z",
       permanentRepairsAuthorized: false,
     },

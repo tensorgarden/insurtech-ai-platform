@@ -402,12 +402,12 @@ describe("InsurTech AI Platform -- demo data integrity", () => {
       claim.lossMitigationCheckpoint ? [claim.lossMitigationCheckpoint] : [],
     );
 
-    expect(mitigationCheckpoints.some((checkpoint) => checkpoint.inspectionStatus === "pending")).toBe(
+    expect(mitigationCheckpoints.some((checkpoint) => checkpoint.inspectionStatus === "scoped")).toBe(
       true,
     );
 
     for (const checkpoint of mitigationCheckpoints) {
-      if (checkpoint.inspectionStatus === "pending") {
+      if (checkpoint.inspectionStatus !== "completed") {
         expect(checkpoint.permanentRepairsAuthorized).toBe(false);
       }
 
@@ -418,14 +418,16 @@ describe("InsurTech AI Platform -- demo data integrity", () => {
     }
   });
 
-  it("gives pending property inspections a visible appointment before repairs can proceed", () => {
-    const pendingInspectionClaims = demoClaims.filter(
-      (claim) => claim.lossMitigationCheckpoint?.inspectionStatus === "pending",
+  it("gives incomplete property inspections a visible follow-up appointment", () => {
+    const incompleteInspectionClaims = demoClaims.filter(
+      (claim) =>
+        claim.lossMitigationCheckpoint &&
+        claim.lossMitigationCheckpoint.inspectionStatus !== "completed",
     );
 
-    expect(pendingInspectionClaims.length).toBeGreaterThan(0);
+    expect(incompleteInspectionClaims.length).toBeGreaterThan(0);
 
-    for (const claim of pendingInspectionClaims) {
+    for (const claim of incompleteInspectionClaims) {
       const checkpoint = claim.lossMitigationCheckpoint;
       expect(checkpoint?.inspectionScheduledAt).toBeDefined();
       expect(Number.isNaN(Date.parse(checkpoint?.inspectionScheduledAt ?? ""))).toBe(false);
@@ -434,6 +436,10 @@ describe("InsurTech AI Platform -- demo data integrity", () => {
       expect(appointmentAt).toBeGreaterThan(Date.parse(claim.lastUpdated));
       expect(appointmentAt - filedAt).toBeLessThanOrEqual(30 * 24 * 60 * 60 * 1000);
       expect(checkpoint?.permanentRepairsAuthorized).toBe(false);
+
+      if (checkpoint?.inspectionStatus === "scoped") {
+        expect(checkpoint.action).toMatch(/follow-up inspection|hidden damage/i);
+      }
     }
   });
 
