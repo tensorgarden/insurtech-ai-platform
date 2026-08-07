@@ -8,28 +8,33 @@ const outDir = path.resolve('docs/screenshots');
 const captures = [
   {
     file: '01-dashboard-hero.png',
-    description: 'Landing/dashboard hero with active practice loop',
+    description: 'Dashboard hero with insurance agency KPIs',
     locator: 'header'
   },
   {
-    file: '02-candidate-workspace-session-builder.png',
-    description: 'Candidate workspace, session builder, and coach/admin roles',
-    locator: 'section:has-text("Candidate workspace")'
+    file: '02-policy-book.png',
+    description: 'Policy book with active policies, risk scores, and coverage',
+    locator: ':has-text("Policy Book")'
   },
   {
-    file: '03-transcript-follow-up.png',
-    description: 'Transcript and deterministic mock AI follow-up',
-    locator: 'section:has-text("Transcript and mock AI follow-up")'
+    file: '03-claims-pipeline.png',
+    description: 'Claims pipeline with fraud detection and processing stages',
+    locator: ':has-text("Claims Pipeline")'
   },
   {
-    file: '04-feedback-rubric-report.png',
-    description: 'Rubric scoring and feedback report',
-    locator: 'section:has-text("Rubric scoring and feedback report")'
+    file: '04-recent-claims.png',
+    description: 'Recent claims with AI triage rationale and governance checkpoints',
+    locator: ':has-text("Recent Claims")'
   },
   {
-    file: '05-admin-analytics.png',
-    description: 'Admin progress dashboard and candidate progress timeline',
-    locator: 'section:has-text("Admin progress dashboard")'
+    file: '05-customer-risk-analytics.png',
+    description: 'Customer portal and risk analytics dashboard',
+    locator: ':has-text("Customer Portal")'
+  },
+  {
+    file: '06-agency-metrics.png',
+    description: 'Agency performance metrics and customer risk scores',
+    locator: ':has-text("Agency Metrics")'
   },
   {
     file: '00-full-page.png',

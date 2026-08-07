@@ -31,6 +31,18 @@ It is a demo, not a product. But the architecture is real: the AI risk engine li
 | Risk Analytics | Risk assessment summaries with factor breakdowns and fraud detection stats |
 | Agency Metrics | Portfolio-level KPIs: retention rate, NPS, fraud detection rate, resolution days |
 
+## Screenshots
+
+| Screenshot | Description |
+|---|---|
+| ![Dashboard hero with insurance agency KPIs](docs/screenshots/01-dashboard-hero.png) | Dashboard hero with insurance agency KPIs |
+| ![Policy book with active policies, risk scores, and coverage](docs/screenshots/02-policy-book.png) | Policy book with active policies, risk scores, and coverage |
+| ![Claims pipeline with fraud detection and processing stages](docs/screenshots/03-claims-pipeline.png) | Claims pipeline with fraud detection and processing stages |
+| ![Recent claims with AI triage rationale and governance checkpoints](docs/screenshots/04-recent-claims.png) | Recent claims with AI triage rationale and governance checkpoints |
+| ![Customer portal and risk analytics dashboard](docs/screenshots/05-customer-risk-analytics.png) | Customer portal and risk analytics dashboard |
+| ![Agency performance metrics and customer risk scores](docs/screenshots/06-agency-metrics.png) | Agency performance metrics and customer risk scores |
+| ![Full-page portfolio demo screenshot](docs/screenshots/00-full-page.png) | Full-page portfolio demo screenshot |
+
 ## Features
 
 - **AI risk scoring**: Every policy receives a 0-100 risk score computed from claims history, payment behavior, property location, and credit factors
