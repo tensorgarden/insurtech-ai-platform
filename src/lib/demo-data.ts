@@ -435,6 +435,18 @@ export const demoClaims: Claim[] = [
         },
       ],
     },
+    recoverableDepreciationCheckpoint: {
+      status: "withheld",
+      ownerRole: "adjuster",
+      replacementCostValue: 85000,
+      actualCashValuePaid: 62000,
+      withheldAmount: 23000,
+      releasedAmount: 0,
+      releaseCondition:
+        "Release withheld depreciation only after the follow-up inspection completes, permanent repairs are authorized, and contractor completion invoices are received.",
+      submitProofBy: "2027-05-22T17:00:00Z",
+      ruleReference: "Carrier-configured Washington replacement cost holdback workflow",
+    },
     aiDecisionRationale: "Large-loss fire claim remains pending until third-party restoration estimate and fire department findings reconcile with the reserve.",
     evidenceAnchors: [
       { label: "Fire department incident report", sourceType: "fire_report", receivedAt: "2026-05-23T10:20:00Z" },

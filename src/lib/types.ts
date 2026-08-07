@@ -175,6 +175,20 @@ export interface ClaimAdditionalLivingExpenseCheckpoint {
   items: ClaimAdditionalLivingExpenseItem[];
 }
 
+export type ClaimDepreciationHoldbackStatus = "withheld" | "partially_released" | "released";
+
+export interface ClaimRecoverableDepreciationCheckpoint {
+  status: ClaimDepreciationHoldbackStatus;
+  ownerRole: ClaimGovernanceOwnerRole;
+  replacementCostValue: number;
+  actualCashValuePaid: number;
+  withheldAmount: number;
+  releasedAmount: number;
+  releaseCondition: string;
+  submitProofBy: string;
+  ruleReference: string;
+}
+
 export interface Claim {
   id: string;
   claimNumber: string;
@@ -200,6 +214,7 @@ export interface Claim {
   claimantReviewCheckpoint?: ClaimantReviewCheckpoint;
   lossMitigationCheckpoint?: ClaimLossMitigationCheckpoint;
   additionalLivingExpenseCheckpoint?: ClaimAdditionalLivingExpenseCheckpoint;
+  recoverableDepreciationCheckpoint?: ClaimRecoverableDepreciationCheckpoint;
   aiDecisionRationale: string;
   evidenceAnchors: ClaimEvidenceAnchor[];
   evidenceRequirements: ClaimEvidenceRequirement[];

@@ -349,6 +349,14 @@ function ClaimCard({ claim }: { claim: Claim }) {
     ready_for_review: "blue",
     reimbursed: "green",
   };
+  const depreciationHoldbackTone: Record<
+    NonNullable<Claim["recoverableDepreciationCheckpoint"]>["status"],
+    "amber" | "blue" | "green"
+  > = {
+    withheld: "amber",
+    partially_released: "blue",
+    released: "green",
+  };
 
   const typeLabel: Record<string, string> = {
     auto_collision: "Auto Collision",
@@ -549,6 +557,44 @@ function ClaimCard({ claim }: { claim: Claim }) {
                 </li>
               ))}
             </ul>
+          </div>
+        )}
+        {claim.recoverableDepreciationCheckpoint && (
+          <div className="mt-2 rounded-md border border-amber-100 bg-amber-50/60 p-2">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <div className="font-semibold text-slate-700">Recoverable depreciation holdback</div>
+              <Badge
+                tone={depreciationHoldbackTone[claim.recoverableDepreciationCheckpoint.status]}
+              >
+                {claim.recoverableDepreciationCheckpoint.status.split("_").join(" ")}
+              </Badge>
+            </div>
+            <p className="mt-1 text-slate-600">
+              {claim.recoverableDepreciationCheckpoint.releaseCondition}
+            </p>
+            <div className="mt-1 text-slate-500">
+              {formatCurrency(claim.recoverableDepreciationCheckpoint.withheldAmount)} withheld of{" "}
+              {formatCurrency(claim.recoverableDepreciationCheckpoint.replacementCostValue)}{" "}
+              replacement cost --{" "}
+              {formatCurrency(claim.recoverableDepreciationCheckpoint.releasedAmount)} released so
+              far
+            </div>
+            <div className="mt-1 text-slate-400">
+              Owner: {claim.recoverableDepreciationCheckpoint.ownerRole.split("_").join(" ")} --
+              submit repair completion proof by{" "}
+              <time dateTime={claim.recoverableDepreciationCheckpoint.submitProofBy}>
+                {new Date(
+                  claim.recoverableDepreciationCheckpoint.submitProofBy,
+                ).toLocaleDateString("en-US", {
+                  month: "short",
+                  day: "numeric",
+                  year: "numeric",
+                })}
+              </time>
+            </div>
+            <div className="mt-1 text-slate-400">
+              {claim.recoverableDepreciationCheckpoint.ruleReference}
+            </div>
           </div>
         )}
         <div className="mt-2 rounded-md bg-white/70 p-2">

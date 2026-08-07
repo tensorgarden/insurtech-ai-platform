@@ -492,6 +492,55 @@ describe("InsurTech AI Platform -- demo data integrity", () => {
     }
   });
 
+  it("withholds recoverable depreciation until repair completion is proven", () => {
+    const holdbackClaims = demoClaims.filter((claim) => claim.recoverableDepreciationCheckpoint);
+
+    expect(holdbackClaims.length).toBeGreaterThan(0);
+
+    for (const claim of holdbackClaims) {
+      const checkpoint = claim.recoverableDepreciationCheckpoint;
+      expect(claim.lossMitigationCheckpoint).toBeDefined();
+      expect(checkpoint?.withheldAmount).toBe(
+        (checkpoint?.replacementCostValue ?? 0) - (checkpoint?.actualCashValuePaid ?? 0),
+      );
+      expect(checkpoint?.withheldAmount).toBeGreaterThan(0);
+      expect(checkpoint?.releasedAmount).toBeLessThanOrEqual(checkpoint?.withheldAmount ?? 0);
+      expect(Number.isNaN(Date.parse(checkpoint?.submitProofBy ?? ""))).toBe(false);
+      expect(Date.parse(checkpoint?.submitProofBy ?? "")).toBeGreaterThan(
+        Date.parse(claim.filedDate),
+      );
+      expect(checkpoint?.ruleReference).toMatch(/carrier-configured.+holdback/i);
+
+      if (checkpoint?.status === "withheld") {
+        expect(checkpoint.releasedAmount).toBe(0);
+      }
+
+      if (checkpoint?.status === "released") {
+        expect(checkpoint.releasedAmount).toBe(checkpoint.withheldAmount);
+        expect(claim.lossMitigationCheckpoint?.permanentRepairsAuthorized).toBe(true);
+      }
+    }
+  });
+
+  it("keeps depreciation withheld while permanent repairs are unauthorized", () => {
+    const unauthorizedClaims = demoClaims.filter(
+      (claim) =>
+        claim.recoverableDepreciationCheckpoint &&
+        claim.lossMitigationCheckpoint &&
+        !claim.lossMitigationCheckpoint.permanentRepairsAuthorized,
+    );
+
+    expect(unauthorizedClaims.length).toBeGreaterThan(0);
+
+    for (const claim of unauthorizedClaims) {
+      expect(claim.recoverableDepreciationCheckpoint?.status).toBe("withheld");
+      expect(claim.recoverableDepreciationCheckpoint?.releasedAmount).toBe(0);
+      expect(claim.recoverableDepreciationCheckpoint?.releaseCondition).toMatch(
+        /inspection|authorized|invoices/i,
+      );
+    }
+  });
+
   it("keeps a jurisdiction-aware compliance diary on every claim", () => {
     const validObligations = new Set([
       "claim_acknowledgment",
