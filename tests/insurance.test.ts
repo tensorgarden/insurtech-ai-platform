@@ -571,6 +571,26 @@ describe("InsurTech AI Platform -- demo data integrity", () => {
     }
   });
 
+  it("starts newly filed claims with a claim-acknowledgment compliance obligation", () => {
+    const newClaims = demoClaims.filter((c) => c.status === "new");
+
+    expect(newClaims.length).toBeGreaterThan(0);
+
+    for (const claim of newClaims) {
+      expect(claim.complianceCheckpoint.obligation).toBe("claim_acknowledgment");
+      expect(claim.complianceCheckpoint.status).not.toBe("met");
+      expect(claim.complianceCheckpoint.ruleReference).toMatch(
+        /carrier-configured.+acknowledgment diary/i,
+      );
+
+      const filedAt = Date.parse(claim.filedDate);
+      const dueAt = Date.parse(claim.complianceCheckpoint.dueAt);
+      const daysToAcknowledge = (dueAt - filedAt) / (24 * 60 * 60 * 1000);
+      expect(daysToAcknowledge).toBeGreaterThan(0);
+      expect(daysToAcknowledge).toBeLessThanOrEqual(15);
+    }
+  });
+
   it("does not mark open or adverse-action compliance obligations complete", () => {
     for (const claim of demoClaims.filter(
       (item) => ["new", "under_review"].includes(item.status) || item.adverseActionNoticeRequired,

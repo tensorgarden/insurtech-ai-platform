@@ -339,10 +339,10 @@ export const demoClaims: Claim[] = [
     },
     complianceCheckpoint: {
       jurisdiction: "IL",
-      obligation: "status_update",
+      obligation: "claim_acknowledgment",
       status: "due",
       dueAt: "2026-06-10T17:00:00Z",
-      ruleReference: "Carrier-configured Illinois claims communication diary",
+      ruleReference: "Carrier-configured Illinois claim acknowledgment diary",
     },
     aiDecisionRationale: "Low fraud score with aligned dashcam and police details; adjuster verifies liability before payout recommendation.",
     evidenceAnchors: [
