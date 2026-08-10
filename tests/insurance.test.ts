@@ -639,4 +639,50 @@ describe("InsurTech AI Platform -- demo data integrity", () => {
       expect(claim.reserveAmount).toBeGreaterThanOrEqual(expectedPayoutFloor);
     }
   });
+
+
+  it("fraud signals capture typed indicators with confidence levels", () => {
+    const validIndicators = new Set([
+      "rapid_claim_frequency",
+      "inflated_claim_amount",
+      "inconsistent_statements",
+      "staged_loss_pattern",
+      "prior_similar_claim",
+      "identity_mismatch",
+      "witness_credential_gap",
+      "lack_of_supporting_evidence",
+    ]);
+    const validConfidences = new Set(["low", "moderate", "high"]);
+
+    for (const claim of demoClaims) {
+      expect(Array.isArray(claim.fraudSignals)).toBe(true);
+      for (const signal of claim.fraudSignals) {
+        expect(validIndicators.has(signal.indicator)).toBe(true);
+        expect(validConfidences.has(signal.confidence)).toBe(true);
+        expect(signal.reasoning.length).toBeGreaterThan(20);
+        expect(Number.isNaN(Date.parse(signal.detectedAt))).toBe(false);
+      }
+    }
+  });
+
+  it("high-fraud-score claims carry at least one moderate+ confidence fraud signal", () => {
+    const highFraudClaims = demoClaims.filter((c) => c.aiFraudScore >= 70);
+    for (const claim of highFraudClaims) {
+      const hasModerateOrHigh = claim.fraudSignals.some(
+        (s) => s.confidence === "moderate" || s.confidence === "high"
+      );
+      expect(hasModerateOrHigh).toBe(true);
+    }
+  });
+
+  it("fraud signals align with high-fraud-score triage routing", () => {
+    const triageHighFraud = demoClaims.filter((c) =>
+      c.triageSignals.includes("high_fraud_score")
+    );
+    for (const claim of triageHighFraud) {
+      expect(claim.fraudSignals.length).toBeGreaterThanOrEqual(1);
+      expect(claim.aiFraudScore).toBeGreaterThanOrEqual(50);
+    }
+  });
+
 });

@@ -27,6 +27,23 @@ export type ClaimTriageSignal =
   | "adverse_action_risk"
   | "liability_review";
 
+export type ClaimFraudIndicator =
+  | "rapid_claim_frequency"
+  | "inflated_claim_amount"
+  | "inconsistent_statements"
+  | "staged_loss_pattern"
+  | "prior_similar_claim"
+  | "identity_mismatch"
+  | "witness_credential_gap"
+  | "lack_of_supporting_evidence";
+
+export interface ClaimFraudSignal {
+  indicator: ClaimFraudIndicator;
+  confidence: "low" | "moderate" | "high";
+  reasoning: string;
+  detectedAt: string;
+}
+
 export type ClaimEvidenceSource =
   | "police_report"
   | "photos"
@@ -219,6 +236,7 @@ export interface Claim {
   evidenceAnchors: ClaimEvidenceAnchor[];
   evidenceRequirements: ClaimEvidenceRequirement[];
   aiFraudScore: number;
+  fraudSignals: ClaimFraudSignal[];
   adjuster: string;
   notes: string;
 }
