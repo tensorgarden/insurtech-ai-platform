@@ -25,7 +25,8 @@ export type ClaimTriageSignal =
   | "coverage_dispute"
   | "legal_exposure"
   | "adverse_action_risk"
-  | "liability_review";
+  | "liability_review"
+  | "recovery_potential";
 
 export type ClaimFraudIndicator =
   | "rapid_claim_frequency"
@@ -206,6 +207,29 @@ export interface ClaimRecoverableDepreciationCheckpoint {
   ruleReference: string;
 }
 
+export type ClaimRecoveryStatus =
+  | "assessment_due"
+  | "pursuing"
+  | "recovered"
+  | "no_recovery";
+
+export type ClaimLiabilityAttributionStatus =
+  | "not_applicable"
+  | "not_assessed"
+  | "in_progress"
+  | "completed";
+
+export interface ClaimRecoveryCheckpoint {
+  status: ClaimRecoveryStatus;
+  ownerRole: ClaimGovernanceOwnerRole;
+  liabilityAttribution: ClaimLiabilityAttributionStatus;
+  evidencePreserved: boolean;
+  potentialRecoveryAmount?: number;
+  recoveredAmount?: number;
+  nextAction: string;
+  nextReviewAt: string;
+}
+
 export interface Claim {
   id: string;
   claimNumber: string;
@@ -232,6 +256,7 @@ export interface Claim {
   lossMitigationCheckpoint?: ClaimLossMitigationCheckpoint;
   additionalLivingExpenseCheckpoint?: ClaimAdditionalLivingExpenseCheckpoint;
   recoverableDepreciationCheckpoint?: ClaimRecoverableDepreciationCheckpoint;
+  recoveryCheckpoint: ClaimRecoveryCheckpoint;
   aiDecisionRationale: string;
   evidenceAnchors: ClaimEvidenceAnchor[];
   evidenceRequirements: ClaimEvidenceRequirement[];

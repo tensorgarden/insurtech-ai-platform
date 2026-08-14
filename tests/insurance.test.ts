@@ -706,3 +706,78 @@ describe("InsurTech AI Platform -- demo data integrity", () => {
   });
 
 });
+
+describe("InsurTech AI Platform -- subrogation recovery governance", () => {
+  it("evaluates recovery potential on every claim with a dated, owned checkpoint", () => {
+    const validStatuses = new Set(["assessment_due", "pursuing", "recovered", "no_recovery"]);
+    const validAttributions = new Set(["not_applicable", "not_assessed", "in_progress", "completed"]);
+    const validOwnerRoles = new Set(["adjuster", "supervisor", "legal", "customer", "third_party"]);
+
+    for (const claim of demoClaims) {
+      const checkpoint = claim.recoveryCheckpoint;
+      expect(validStatuses.has(checkpoint.status)).toBe(true);
+      expect(validAttributions.has(checkpoint.liabilityAttribution)).toBe(true);
+      expect(validOwnerRoles.has(checkpoint.ownerRole)).toBe(true);
+      expect(checkpoint.nextAction.length).toBeGreaterThan(40);
+      expect(Number.isNaN(Date.parse(checkpoint.nextReviewAt))).toBe(false);
+    }
+  });
+
+  it("preserves recovery evidence while assessment or pursuit is still open", () => {
+    for (const claim of demoClaims) {
+      const checkpoint = claim.recoveryCheckpoint;
+      if (["assessment_due", "pursuing"].includes(checkpoint.status)) {
+        expect(checkpoint.evidencePreserved).toBe(true);
+        expect(["not_assessed", "in_progress"]).toContain(checkpoint.liabilityAttribution);
+      }
+    }
+  });
+
+  it("keeps no-recovery outcomes as completed attribution decisions, not unassessed defaults", () => {
+    for (const claim of demoClaims) {
+      const checkpoint = claim.recoveryCheckpoint;
+      if (checkpoint.status === "no_recovery") {
+        expect(["completed", "not_applicable"]).toContain(checkpoint.liabilityAttribution);
+        expect(checkpoint.recoveredAmount ?? 0).toBe(0);
+      }
+    }
+  });
+
+  it("flags liable-third-party claims for recovery before the file can close", () => {
+    const recoveryCandidates = demoClaims.filter((c) =>
+      c.triageSignals.includes("recovery_potential")
+    );
+    expect(recoveryCandidates.length).toBeGreaterThan(0);
+
+    for (const claim of recoveryCandidates) {
+      expect(claim.recoveryCheckpoint.status).not.toBe("no_recovery");
+      expect(claim.recoveryCheckpoint.evidencePreserved).toBe(true);
+      const lastUpdated = Date.parse(claim.lastUpdated);
+      const nextReviewAt = Date.parse(claim.recoveryCheckpoint.nextReviewAt);
+      expect(nextReviewAt).toBeGreaterThan(lastUpdated);
+      expect(nextReviewAt - lastUpdated).toBeLessThanOrEqual(7 * 24 * 60 * 60 * 1000);
+    }
+  });
+
+  it("tracks a positive potential recovery and preserved evidence on the pursuing collision claim", () => {
+    const pursuingClaims = demoClaims.filter(
+      (c) => c.recoveryCheckpoint.status === "pursuing"
+    );
+    expect(pursuingClaims.length).toBeGreaterThan(0);
+
+    for (const claim of pursuingClaims) {
+      expect(claim.recoveryCheckpoint.potentialRecoveryAmount).toBeGreaterThan(0);
+      expect(claim.recoveryCheckpoint.evidencePreserved).toBe(true);
+      expect(claim.recoveryCheckpoint.liabilityAttribution).toBe("in_progress");
+    }
+  });
+
+  it("never reports a recovery amount without recovered status", () => {
+    for (const claim of demoClaims) {
+      const checkpoint = claim.recoveryCheckpoint;
+      if (checkpoint.status !== "recovered") {
+        expect(checkpoint.recoveredAmount ?? 0).toBe(0);
+      }
+    }
+  });
+});

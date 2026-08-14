@@ -357,6 +357,15 @@ function ClaimCard({ claim }: { claim: Claim }) {
     partially_released: "blue",
     released: "green",
   };
+  const recoveryTone: Record<
+    Claim["recoveryCheckpoint"]["status"],
+    "amber" | "blue" | "green" | "slate"
+  > = {
+    assessment_due: "amber",
+    pursuing: "blue",
+    recovered: "green",
+    no_recovery: "slate",
+  };
 
   const typeLabel: Record<string, string> = {
     auto_collision: "Auto Collision",
@@ -597,6 +606,37 @@ function ClaimCard({ claim }: { claim: Claim }) {
             </div>
           </div>
         )}
+        <div className="mt-2 rounded-md border border-emerald-100 bg-emerald-50/60 p-2">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <div className="font-semibold text-slate-700">Subrogation recovery checkpoint</div>
+            <Badge tone={recoveryTone[claim.recoveryCheckpoint.status]}>
+              {claim.recoveryCheckpoint.status.split("_").join(" ")}
+            </Badge>
+          </div>
+          <p className="mt-1 text-slate-600">{claim.recoveryCheckpoint.nextAction}</p>
+          <div className="mt-1 text-slate-500">
+            Owner: {claim.recoveryCheckpoint.ownerRole.split("_").join(" ")} -- liability{" "}
+            {claim.recoveryCheckpoint.liabilityAttribution.split("_").join(" ")} --{" "}
+            {claim.recoveryCheckpoint.evidencePreserved ? "evidence preserved" : "evidence at risk"}
+            {claim.recoveryCheckpoint.potentialRecoveryAmount !== undefined && (
+              <> -- {formatCurrency(claim.recoveryCheckpoint.potentialRecoveryAmount)} potential recovery</>
+            )}
+            {claim.recoveryCheckpoint.recoveredAmount !== undefined &&
+              claim.recoveryCheckpoint.recoveredAmount > 0 && (
+                <> -- {formatCurrency(claim.recoveryCheckpoint.recoveredAmount)} recovered</>
+              )}
+          </div>
+          <div className="mt-1 text-slate-400">
+            Next review{" "}
+            <time dateTime={claim.recoveryCheckpoint.nextReviewAt}>
+              {new Date(claim.recoveryCheckpoint.nextReviewAt).toLocaleDateString("en-US", {
+                month: "short",
+                day: "numeric",
+                year: "numeric",
+              })}
+            </time>
+          </div>
+        </div>
         <div className="mt-2 rounded-md bg-white/70 p-2">
           <div className="font-semibold text-slate-700">Governance checkpoint</div>
           <p className="mt-1 text-slate-500">{claim.governanceCheckpoint.nextAction}</p>

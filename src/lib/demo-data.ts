@@ -322,7 +322,7 @@ export const demoClaims: Claim[] = [
     documentStatus: "complete",
     reviewGate: "adjuster_review",
     triageLane: "fast_attention",
-    triageSignals: ["complete_evidence", "liability_review"],
+    triageSignals: ["complete_evidence", "liability_review", "recovery_potential"],
     adverseActionNoticeRequired: false,
     governanceCheckpoint: {
       ownerRole: "adjuster",
@@ -343,6 +343,17 @@ export const demoClaims: Claim[] = [
       status: "due",
       dueAt: "2026-06-10T17:00:00Z",
       ruleReference: "Carrier-configured Illinois claim acknowledgment diary",
+    },
+    recoveryCheckpoint: {
+      status: "pursuing",
+      ownerRole: "adjuster",
+      liabilityAttribution: "in_progress",
+      evidencePreserved: true,
+      potentialRecoveryAmount: 11000,
+      recoveredAmount: 0,
+      nextAction:
+        "Confirm comparative-negligence share with the subrogation desk before collision photos and the police citation are archived.",
+      nextReviewAt: "2026-06-12T17:00:00Z",
     },
     aiDecisionRationale: "Low fraud score with aligned dashcam and police details; adjuster verifies liability before payout recommendation.",
     evidenceAnchors: [
@@ -383,7 +394,7 @@ export const demoClaims: Claim[] = [
     documentStatus: "pending_third_party",
     reviewGate: "supervisor_review",
     triageLane: "missing_information",
-    triageSignals: ["third_party_dependency", "large_loss"],
+    triageSignals: ["third_party_dependency", "large_loss", "recovery_potential"],
     adverseActionNoticeRequired: false,
     governanceCheckpoint: {
       ownerRole: "third_party",
@@ -404,6 +415,15 @@ export const demoClaims: Claim[] = [
       status: "at_risk",
       dueAt: "2026-06-10T17:00:00Z",
       ruleReference: "Carrier-configured Washington claims communication diary",
+    },
+    recoveryCheckpoint: {
+      status: "assessment_due",
+      ownerRole: "adjuster",
+      liabilityAttribution: "not_assessed",
+      evidencePreserved: true,
+      nextAction:
+        "Complete the fire-origin investigation and screen for product-liability recovery before the appliance and scene evidence are released.",
+      nextReviewAt: "2026-06-13T17:00:00Z",
     },
     lossMitigationCheckpoint: {
       status: "in_progress",
@@ -525,6 +545,15 @@ export const demoClaims: Claim[] = [
       dueAt: "2026-06-04T17:00:00Z",
       ruleReference: "Carrier-configured California settlement payment diary",
     },
+    recoveryCheckpoint: {
+      status: "no_recovery",
+      ownerRole: "adjuster",
+      liabilityAttribution: "not_applicable",
+      evidencePreserved: true,
+      nextAction:
+        "Recovery window closed with no responsible third party identified; the archived search log stays available for later leads.",
+      nextReviewAt: "2026-06-01T17:00:00Z",
+    },
     aiDecisionRationale: "Theft payout cleared after police report, policy status, and recovery attempts support the covered loss amount.",
     evidenceAnchors: [
       { label: "Vehicle theft police report", sourceType: "police_report", receivedAt: "2026-04-30T13:05:00Z" },
@@ -578,6 +607,15 @@ export const demoClaims: Claim[] = [
       dueAt: "2026-05-12T17:00:00Z",
       completedAt: "2026-05-10T14:00:00Z",
       ruleReference: "Carrier-configured Texas settlement payment diary",
+    },
+    recoveryCheckpoint: {
+      status: "no_recovery",
+      ownerRole: "legal",
+      liabilityAttribution: "completed",
+      evidencePreserved: true,
+      nextAction:
+        "Liability settlement closed after the premises review found no viable recovery source; medical bill evidence remains archived.",
+      nextReviewAt: "2026-05-10T14:00:00Z",
     },
     aiDecisionRationale: "Liability settlement required legal review because medical bills and premises inspection findings drove the payout recommendation.",
     evidenceAnchors: [
@@ -640,6 +678,15 @@ export const demoClaims: Claim[] = [
       completedAt: "2026-04-15T09:30:00Z",
       ruleReference: "Carrier-configured California settlement payment diary",
     },
+    recoveryCheckpoint: {
+      status: "no_recovery",
+      ownerRole: "adjuster",
+      liabilityAttribution: "not_applicable",
+      evidencePreserved: true,
+      nextAction:
+        "No third-party liability identified for the theft; item photos and the police report are archived with the settlement worksheet.",
+      nextReviewAt: "2026-04-15T09:30:00Z",
+    },
     aiDecisionRationale: "Home theft claim paid after police report and item photos supported the scheduled personal-property loss.",
     evidenceAnchors: [
       { label: "Police burglary report", sourceType: "police_report", receivedAt: "2026-03-03T08:30:00Z" },
@@ -693,6 +740,15 @@ export const demoClaims: Claim[] = [
       status: "at_risk",
       dueAt: "2026-03-02T18:00:00Z",
       ruleReference: "Carrier-configured California coverage decision notice diary",
+    },
+    recoveryCheckpoint: {
+      status: "no_recovery",
+      ownerRole: "supervisor",
+      liabilityAttribution: "not_applicable",
+      evidencePreserved: true,
+      nextAction:
+        "Recovery review stays closed while the coverage decision remains disputed; without an indemnity payment there is no recovery right to pursue.",
+      nextReviewAt: "2026-03-01T12:00:00Z",
     },
     claimantReviewCheckpoint: {
       status: "pending_notice",
