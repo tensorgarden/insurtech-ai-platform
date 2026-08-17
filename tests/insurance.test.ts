@@ -781,3 +781,68 @@ describe("InsurTech AI Platform -- subrogation recovery governance", () => {
     }
   });
 });
+
+describe("InsurTech AI Platform -- water damage cause-of-loss governance", () => {
+  it("tracks a typed cause-of-loss status on every home water claim", () => {
+    const validCauses = new Set([
+      "under_investigation",
+      "confirmed_sudden_accidental",
+      "excluded_long_term_seepage",
+    ]);
+    const validSources = new Set(["plumbing", "appliance", "weather_event", "sewage_backup"]);
+    const validSecondaryRisks = new Set(["monitoring", "mitigated", "none"]);
+
+    const waterClaims = demoClaims.filter((claim) => claim.type === "home_water");
+
+    expect(waterClaims.length).toBeGreaterThan(0);
+
+    for (const claim of waterClaims) {
+      const checkpoint = claim.waterDamageCheckpoint;
+      expect(checkpoint).toBeDefined();
+      expect(validCauses.has(checkpoint?.causeOfLossStatus ?? "")).toBe(true);
+      expect(validSources.has(checkpoint?.sourceCategory ?? "")).toBe(true);
+      expect(validSecondaryRisks.has(checkpoint?.secondaryDamageRisk ?? "")).toBe(true);
+      expect(Number.isNaN(Date.parse(checkpoint?.dryingPlanDueAt ?? ""))).toBe(false);
+      expect(checkpoint?.evidenceItems.length).toBeGreaterThanOrEqual(2);
+    }
+  });
+
+  it("keeps water claims out of adjuster-ready payout while cause of loss is under investigation", () => {
+    const investigatingClaims = demoClaims.filter(
+      (claim) => claim.waterDamageCheckpoint?.causeOfLossStatus === "under_investigation",
+    );
+
+    expect(investigatingClaims.length).toBeGreaterThan(0);
+
+    for (const claim of investigatingClaims) {
+      expect(claim.payoutAmount).toBe(0);
+      expect(claim.documentStatus).not.toBe("complete");
+      expect(claim.reviewGate).not.toBe("auto_clear");
+      expect(claim.aiDecisionRationale).toMatch(/cause-of-loss|cause of loss|seepage/i);
+
+      const lastUpdated = Date.parse(claim.lastUpdated);
+      const dryingDue = Date.parse(claim.waterDamageCheckpoint?.dryingPlanDueAt ?? "");
+      expect(dryingDue).toBeGreaterThan(lastUpdated);
+      expect(dryingDue - lastUpdated).toBeLessThanOrEqual(7 * 24 * 60 * 60 * 1000);
+    }
+  });
+
+  it("keeps pending drying evidence in the third-party vendor lane while secondary damage is monitored", () => {
+    const monitoredClaims = demoClaims.filter(
+      (claim) => claim.waterDamageCheckpoint?.secondaryDamageRisk === "monitoring",
+    );
+
+    expect(monitoredClaims.length).toBeGreaterThan(0);
+
+    for (const claim of monitoredClaims) {
+      const checkpoint = claim.waterDamageCheckpoint;
+      expect(
+        checkpoint?.evidenceItems.some((item) => item.status === "pending"),
+      ).toBe(true);
+      expect(claim.communicationCheckpoint.audience).toBe("third_party");
+      expect(claim.communicationCheckpoint.channel).toBe("vendor_portal");
+      expect(claim.governanceCheckpoint.ownerRole).toBe("third_party");
+      expect(`${claim.governanceCheckpoint.nextAction}`).toMatch(/drying|moisture|repair/i);
+    }
+  });
+});

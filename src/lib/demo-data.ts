@@ -302,6 +302,22 @@ export const demoPolicies: Policy[] = [
     aiRiskLevel: "low",
     tags: ["toyota_camry", "low_mileage", "clean_record"],
   },
+  {
+    id: "pol_009",
+    policyNumber: "HOME-5521-MI",
+    customerId: "cust_006",
+    type: "home",
+    status: "active",
+    coverageAmount: 420000,
+    monthlyPremium: 260,
+    annualPremium: 3120,
+    deductible: 2500,
+    startDate: "2026-03-01T00:00:00Z",
+    endDate: "2027-02-28T00:00:00Z",
+    aiRiskScore: 38,
+    aiRiskLevel: "moderate",
+    tags: ["coastal", "older_plumbing", "hurricane_zone"],
+  },
 ];
 
 export const demoClaims: Claim[] = [
@@ -791,6 +807,102 @@ export const demoClaims: Claim[] = [
     adjuster: "Jennifer Wu",
     notes: "Denied: policy not in force at time of incident. Coverage gap identified. Fraud indicators: inconsistent statements.",
   },
+  {
+    id: "clm_007",
+    claimNumber: "CLM-2026-0918",
+    policyId: "pol_009",
+    customerId: "cust_006",
+    type: "home_water",
+    status: "under_review",
+    amount: 28000,
+    deductibleApplied: 2500,
+    payoutAmount: 0,
+    reserveAmount: 28000,
+    filedDate: "2026-06-10T08:20:00Z",
+    lastUpdated: "2026-06-15T10:00:00Z",
+    fnolChannel: "mobile_app",
+    documentStatus: "pending_third_party",
+    reviewGate: "adjuster_review",
+    triageLane: "missing_information",
+    triageSignals: ["third_party_dependency", "missing_required_documents"],
+    adverseActionNoticeRequired: false,
+    governanceCheckpoint: {
+      ownerRole: "third_party",
+      dueAt: "2026-06-17T17:00:00Z",
+      nextAction:
+        "Collect the plumber's cause-of-loss report and the drying contractor's moisture readings before permanent repairs can be scoped.",
+    },
+    communicationCheckpoint: {
+      audience: "third_party",
+      channel: "vendor_portal",
+      status: "waiting_on_response",
+      lastSentAt: "2026-06-15T10:10:00Z",
+      nextDueAt: "2026-06-17T11:00:00Z",
+      message:
+        "Drying contractor follow-up tracks the pending moisture readings and completion certificate in the vendor lane, separate from customer recontact.",
+    },
+    complianceCheckpoint: {
+      jurisdiction: "FL",
+      obligation: "status_update",
+      status: "due",
+      dueAt: "2026-06-18T17:00:00Z",
+      ruleReference: "Carrier-configured Florida claims communication diary",
+    },
+    recoveryCheckpoint: {
+      status: "no_recovery",
+      ownerRole: "adjuster",
+      liabilityAttribution: "not_applicable",
+      evidencePreserved: true,
+      nextAction:
+        "No liable third party is expected for the interior supply line failure; cause-of-loss evidence stays archived for later plumbing liability review.",
+      nextReviewAt: "2026-06-15T10:00:00Z",
+    },
+    waterDamageCheckpoint: {
+      causeOfLossStatus: "under_investigation",
+      sourceCategory: "plumbing",
+      secondaryDamageRisk: "monitoring",
+      dryingPlanDueAt: "2026-06-17T17:00:00Z",
+      ownerRole: "third_party",
+      action:
+        "Confirm the drying plan meets moisture goals and the cause-of-loss report rules out long-term seepage before permanent repairs are authorized.",
+      evidenceItems: [
+        { label: "Pre-drying moisture readings", status: "received" },
+        { label: "Drying completion certificate", status: "pending" },
+      ],
+    },
+    aiDecisionRationale:
+      "Water claim stays in missing-information triage until the plumbing cause-of-loss report and drying contractor readings reconcile with the reserve.",
+    evidenceAnchors: [
+      { label: "Kitchen supply line leak photos", sourceType: "photos", receivedAt: "2026-06-10T08:45:00Z" },
+      { label: "Customer water damage statement", sourceType: "customer_statement", receivedAt: "2026-06-10T09:10:00Z" },
+    ],
+    evidenceRequirements: [
+      { label: "Kitchen supply line leak photos", status: "received", ownerRole: "adjuster" },
+      {
+        label: "Plumber's cause-of-loss report",
+        status: "pending_third_party",
+        ownerRole: "third_party",
+        dueAt: "2026-06-17T17:00:00Z",
+      },
+      {
+        label: "Drying contractor moisture readings",
+        status: "pending_third_party",
+        ownerRole: "third_party",
+        dueAt: "2026-06-17T17:00:00Z",
+      },
+    ],
+    aiFraudScore: 18,
+    fraudSignals: [
+      {
+        indicator: "lack_of_supporting_evidence",
+        confidence: "low",
+        reasoning: "Cause-of-loss documentation is pending from the third-party plumbing inspection.",
+        detectedAt: "2026-06-15T10:00:00Z",
+      },
+    ],
+    adjuster: "Robert Kim",
+    notes: "Kitchen supply line leak with water migration into living room. Cause-of-loss report and moisture readings pending from third-party vendors.",
+  },
 ];
 
 export const demoRiskAssessments: RiskAssessment[] = [
@@ -835,20 +947,20 @@ export const demoRiskAssessments: RiskAssessment[] = [
 
 export const demoClaimsPipeline: ClaimsPipelineStage[] = [
   { id: "stage_new", name: "New", order: 1, claimCount: 1, totalAmount: 12500 },
-  { id: "stage_review", name: "Under Review", order: 2, claimCount: 1, totalAmount: 85000 },
+  { id: "stage_review", name: "Under Review", order: 2, claimCount: 2, totalAmount: 113000 },
   { id: "stage_approved", name: "Approved", order: 3, claimCount: 1, totalAmount: 42000 },
   { id: "stage_paid", name: "Paid", order: 4, claimCount: 2, totalAmount: 50000 },
   { id: "stage_denied", name: "Denied", order: 5, claimCount: 1, totalAmount: 7800 },
 ];
 
 export const demoAgencyMetrics: AgencyMetrics = {
-  activePolicies: 8,
+  activePolicies: 9,
   policiesExpiring30d: 2,
-  claimsOpen: 2,
+  claimsOpen: 3,
   claimsPaidThisMonth: 2,
-  monthlyPremiumVolume: 6672,
-  annualPremiumVolume: 80064,
-  avgPolicyValue: 2143750,
+  monthlyPremiumVolume: 6932,
+  annualPremiumVolume: 83184,
+  avgPolicyValue: 2024444,
   avgRiskScore: 28,
   avgClaimResolutionDays: 32,
   fraudDetectionRate: 91,

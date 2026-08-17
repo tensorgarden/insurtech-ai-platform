@@ -4,7 +4,7 @@ export type PolicyStatus = "active" | "pending_renewal" | "expiring" | "lapsed" 
 
 export type ClaimStatus = "new" | "under_review" | "approved" | "paid" | "denied";
 
-export type ClaimType = "auto_collision" | "auto_theft" | "home_theft" | "home_fire" | "life_payout" | "commercial_liability";
+export type ClaimType = "auto_collision" | "auto_theft" | "home_theft" | "home_fire" | "home_water" | "life_payout" | "commercial_liability";
 
 export type FnolChannel = "mobile_app" | "agent_portal" | "call_center" | "web_form";
 
@@ -168,6 +168,25 @@ export interface ClaimLossMitigationCheckpoint {
   permanentRepairsAuthorized: boolean;
 }
 
+export type ClaimWaterCauseOfLossStatus =
+  | "under_investigation"
+  | "confirmed_sudden_accidental"
+  | "excluded_long_term_seepage";
+
+export type ClaimWaterSourceCategory = "plumbing" | "appliance" | "weather_event" | "sewage_backup";
+
+export type ClaimWaterSecondaryDamageRisk = "monitoring" | "mitigated" | "none";
+
+export interface ClaimWaterDamageCheckpoint {
+  causeOfLossStatus: ClaimWaterCauseOfLossStatus;
+  sourceCategory: ClaimWaterSourceCategory;
+  secondaryDamageRisk: ClaimWaterSecondaryDamageRisk;
+  dryingPlanDueAt: string;
+  ownerRole: ClaimGovernanceOwnerRole;
+  action: string;
+  evidenceItems: ClaimLossMitigationEvidenceItem[];
+}
+
 export type ClaimAdditionalLivingExpenseStatus =
   | "collecting_receipts"
   | "ready_for_review"
@@ -254,6 +273,7 @@ export interface Claim {
   complianceCheckpoint: ClaimComplianceCheckpoint;
   claimantReviewCheckpoint?: ClaimantReviewCheckpoint;
   lossMitigationCheckpoint?: ClaimLossMitigationCheckpoint;
+  waterDamageCheckpoint?: ClaimWaterDamageCheckpoint;
   additionalLivingExpenseCheckpoint?: ClaimAdditionalLivingExpenseCheckpoint;
   recoverableDepreciationCheckpoint?: ClaimRecoverableDepreciationCheckpoint;
   recoveryCheckpoint: ClaimRecoveryCheckpoint;

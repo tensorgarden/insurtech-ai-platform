@@ -341,6 +341,22 @@ function ClaimCard({ claim }: { claim: Claim }) {
     in_progress: "amber",
     documented: "green",
   };
+  const waterDamageTone: Record<
+    NonNullable<Claim["waterDamageCheckpoint"]>["causeOfLossStatus"],
+    "amber" | "blue" | "green" | "red"
+  > = {
+    under_investigation: "amber",
+    confirmed_sudden_accidental: "green",
+    excluded_long_term_seepage: "red",
+  };
+  const waterSecondaryDamageTone: Record<
+    NonNullable<Claim["waterDamageCheckpoint"]>["secondaryDamageRisk"],
+    "amber" | "green" | "slate"
+  > = {
+    monitoring: "amber",
+    mitigated: "green",
+    none: "slate",
+  };
   const additionalLivingExpenseTone: Record<
     NonNullable<Claim["additionalLivingExpenseCheckpoint"]>["status"],
     "amber" | "blue" | "green"
@@ -372,6 +388,7 @@ function ClaimCard({ claim }: { claim: Claim }) {
     auto_theft: "Auto Theft",
     home_theft: "Home Theft",
     home_fire: "Home Fire",
+    home_water: "Home Water",
     life_payout: "Life Payout",
     commercial_liability: "Commercial Liability",
   };
@@ -525,6 +542,40 @@ function ClaimCard({ claim }: { claim: Claim }) {
             </div>
             <div className="mt-1 text-slate-400">
               Evidence: {claim.lossMitigationCheckpoint.evidenceItems
+                .map((item) => `${item.label} (${item.status})`)
+                .join(", ")}
+            </div>
+          </div>
+        )}
+        {claim.waterDamageCheckpoint && (
+          <div className="mt-2 rounded-md border border-cyan-100 bg-cyan-50/60 p-2">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <div className="font-semibold text-slate-700">Water damage checkpoint</div>
+              <Badge tone={waterDamageTone[claim.waterDamageCheckpoint.causeOfLossStatus]}>
+                {claim.waterDamageCheckpoint.causeOfLossStatus.split("_").join(" ")}
+              </Badge>
+            </div>
+            <p className="mt-1 text-slate-600">{claim.waterDamageCheckpoint.action}</p>
+            <div className="mt-1 text-slate-500">
+              Owner: {claim.waterDamageCheckpoint.ownerRole.split("_").join(" ")} -- source{" "}
+              {claim.waterDamageCheckpoint.sourceCategory.split("_").join(" ")} -- secondary
+              damage{" "}
+              <Badge
+                tone={waterSecondaryDamageTone[claim.waterDamageCheckpoint.secondaryDamageRisk]}
+              >
+                {claim.waterDamageCheckpoint.secondaryDamageRisk.split("_").join(" ")}
+              </Badge>
+            </div>
+            <div className="mt-1 text-slate-400">
+              Drying plan due{" "}
+              <time dateTime={claim.waterDamageCheckpoint.dryingPlanDueAt}>
+                {new Date(claim.waterDamageCheckpoint.dryingPlanDueAt).toLocaleDateString(
+                  "en-US",
+                  { month: "short", day: "numeric" },
+                )}
+              </time>{" "}
+              -- evidence:{" "}
+              {claim.waterDamageCheckpoint.evidenceItems
                 .map((item) => `${item.label} (${item.status})`)
                 .join(", ")}
             </div>
