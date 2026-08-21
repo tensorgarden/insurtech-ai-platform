@@ -846,3 +846,25 @@ describe("InsurTech AI Platform -- water damage cause-of-loss governance", () =>
     }
   });
 });
+
+describe("InsurTech AI Platform -- communication friction telemetry", () => {
+  it("makes repeat contact visible without conflating vendor follow-up with customer recontact", () => {
+    const customerRecontactClaims = demoClaims.filter(
+      (claim) =>
+        claim.communicationCheckpoint.audience === "customer" &&
+        claim.communicationCheckpoint.recontactCount > 0,
+    );
+
+    expect(customerRecontactClaims.length).toBeGreaterThan(0);
+
+    for (const claim of demoClaims) {
+      const checkpoint = claim.communicationCheckpoint;
+      expect(Number.isInteger(checkpoint.recontactCount)).toBe(true);
+      expect(checkpoint.recontactCount).toBeGreaterThanOrEqual(0);
+
+      if (checkpoint.audience === "third_party") {
+        expect(checkpoint.recontactCount).toBe(0);
+      }
+    }
+  });
+});

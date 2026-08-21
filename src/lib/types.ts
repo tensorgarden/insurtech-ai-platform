@@ -112,6 +112,7 @@ export interface ClaimCommunicationCheckpoint {
   audience: ClaimCommunicationAudience;
   channel: ClaimCommunicationChannel;
   status: ClaimCommunicationStatus;
+  recontactCount: number;
   lastSentAt?: string;
   nextDueAt?: string;
   message: string;

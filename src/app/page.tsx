@@ -708,6 +708,15 @@ function ClaimCard({ claim }: { claim: Claim }) {
             <Badge tone={communicationTone[claim.communicationCheckpoint.status]}>
               {claim.communicationCheckpoint.status.split("_").join(" ")}
             </Badge>
+            <span
+              className={
+                claim.communicationCheckpoint.recontactCount > 0
+                  ? "font-medium text-amber-700"
+                  : "text-emerald-700"
+              }
+            >
+              Customer recontacts: {claim.communicationCheckpoint.recontactCount}
+            </span>
             {claim.communicationCheckpoint.nextDueAt && (
               <span>
                 next update {" "}
