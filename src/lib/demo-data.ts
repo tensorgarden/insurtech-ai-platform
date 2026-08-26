@@ -348,6 +348,8 @@ export const demoClaims: Claim[] = [
     communicationCheckpoint: {
       audience: "customer",
       channel: "sms",
+      preferredChannel: "sms",
+      preferenceMatch: "preferred",
       status: "scheduled",
       recontactCount: 1,
       lastSentAt: "2026-06-08T10:05:00Z",
@@ -421,6 +423,7 @@ export const demoClaims: Claim[] = [
     communicationCheckpoint: {
       audience: "third_party",
       channel: "vendor_portal",
+      preferenceMatch: "not_applicable",
       status: "waiting_on_response",
       recontactCount: 0,
       lastSentAt: "2026-06-07T11:20:00Z",
@@ -552,6 +555,8 @@ export const demoClaims: Claim[] = [
     communicationCheckpoint: {
       audience: "customer",
       channel: "customer_portal",
+      preferredChannel: "customer_portal",
+      preferenceMatch: "preferred",
       status: "sent",
       recontactCount: 0,
       lastSentAt: "2026-06-01T17:05:00Z",
@@ -614,11 +619,13 @@ export const demoClaims: Claim[] = [
     },
     communicationCheckpoint: {
       audience: "customer",
-      channel: "sms",
+      channel: "phone",
+      preferredChannel: "sms",
+      preferenceMatch: "alternate",
       status: "sent",
       recontactCount: 0,
       lastSentAt: "2026-05-10T15:30:00Z",
-      message: "Settlement closure notice was sent after legal confirmed premises-safety follow-up was filed.",
+      message: "Settlement closure notice was delivered by phone after legal confirmed premises-safety follow-up was filed.",
     },
     complianceCheckpoint: {
       jurisdiction: "TX",
@@ -686,6 +693,8 @@ export const demoClaims: Claim[] = [
     communicationCheckpoint: {
       audience: "customer",
       channel: "customer_portal",
+      preferredChannel: "customer_portal",
+      preferenceMatch: "preferred",
       status: "sent",
       recontactCount: 0,
       lastSentAt: "2026-04-15T10:45:00Z",
@@ -750,6 +759,8 @@ export const demoClaims: Claim[] = [
     communicationCheckpoint: {
       audience: "customer",
       channel: "customer_portal",
+      preferredChannel: "customer_portal",
+      preferenceMatch: "preferred",
       status: "scheduled",
       recontactCount: 2,
       lastSentAt: "2026-02-28T09:00:00Z",
@@ -841,6 +852,7 @@ export const demoClaims: Claim[] = [
     communicationCheckpoint: {
       audience: "third_party",
       channel: "vendor_portal",
+      preferenceMatch: "not_applicable",
       status: "waiting_on_response",
       recontactCount: 0,
       lastSentAt: "2026-06-15T10:10:00Z",

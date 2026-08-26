@@ -319,6 +319,14 @@ function ClaimCard({ claim }: { claim: Claim }) {
     waiting_on_response: "amber",
     not_required: "slate",
   };
+  const communicationPreferenceTone: Record<
+    Claim["communicationCheckpoint"]["preferenceMatch"],
+    "green" | "amber" | "slate"
+  > = {
+    preferred: "green",
+    alternate: "amber",
+    not_applicable: "slate",
+  };
   const complianceTone: Record<
     Claim["complianceCheckpoint"]["status"],
     "green" | "amber" | "red"
@@ -705,6 +713,10 @@ function ClaimCard({ claim }: { claim: Claim }) {
           <div className="mt-1 flex flex-wrap items-center gap-2 text-slate-400">
             <span>Audience: {claim.communicationCheckpoint.audience.split("_").join(" ")}</span>
             <span>Channel: {claim.communicationCheckpoint.channel.split("_").join(" ")}</span>
+            <span>Preferred: {claim.communicationCheckpoint.preferredChannel?.split("_").join(" ") || "not applicable"}</span>
+            <Badge tone={communicationPreferenceTone[claim.communicationCheckpoint.preferenceMatch]}>
+              {claim.communicationCheckpoint.preferenceMatch.split("_").join(" ")} channel
+            </Badge>
             <Badge tone={communicationTone[claim.communicationCheckpoint.status]}>
               {claim.communicationCheckpoint.status.split("_").join(" ")}
             </Badge>

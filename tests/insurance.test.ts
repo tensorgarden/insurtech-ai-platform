@@ -281,23 +281,30 @@ describe("InsurTech AI Platform -- demo data integrity", () => {
     }
   });
 
-  it("uses each claimant's preferred channel for customer updates", () => {
+  it("tracks preferred channels and flags alternate customer updates", () => {
     const customerPreferences = new Map(
       demoCustomers.map((customer) => [customer.id, customer.preferredCommunicationChannel]),
     );
     const validChannels = new Set(["email", "sms", "phone", "customer_portal", "vendor_portal"]);
+    const validPreferenceMatches = new Set(["preferred", "alternate", "not_applicable"]);
 
-    expect(demoClaims.some((claim) => claim.communicationCheckpoint.channel === "sms")).toBe(true);
-    expect(
-      demoClaims.some((claim) => claim.communicationCheckpoint.channel === "customer_portal"),
-    ).toBe(true);
+    expect(demoClaims.some((claim) => claim.communicationCheckpoint.preferenceMatch === "alternate")).toBe(
+      true,
+    );
 
     for (const claim of demoClaims) {
       const checkpoint = claim.communicationCheckpoint;
       expect(validChannels.has(checkpoint.channel)).toBe(true);
+      expect(validPreferenceMatches.has(checkpoint.preferenceMatch)).toBe(true);
 
       if (checkpoint.audience === "customer") {
-        expect(checkpoint.channel).toBe(customerPreferences.get(claim.customerId));
+        expect(checkpoint.preferredChannel).toBe(customerPreferences.get(claim.customerId));
+        expect(checkpoint.preferenceMatch).toBe(
+          checkpoint.channel === checkpoint.preferredChannel ? "preferred" : "alternate",
+        );
+      } else {
+        expect(checkpoint.preferredChannel).toBeUndefined();
+        expect(checkpoint.preferenceMatch).toBe("not_applicable");
       }
 
       if (checkpoint.audience === "third_party") {

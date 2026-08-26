@@ -108,9 +108,13 @@ export type ClaimCommunicationChannel = CustomerCommunicationChannel | "vendor_p
 
 export type ClaimCommunicationStatus = "sent" | "scheduled" | "waiting_on_response" | "not_required";
 
+export type ClaimCommunicationPreferenceMatch = "preferred" | "alternate" | "not_applicable";
+
 export interface ClaimCommunicationCheckpoint {
   audience: ClaimCommunicationAudience;
   channel: ClaimCommunicationChannel;
+  preferredChannel?: CustomerCommunicationChannel;
+  preferenceMatch: ClaimCommunicationPreferenceMatch;
   status: ClaimCommunicationStatus;
   recontactCount: number;
   lastSentAt?: string;
