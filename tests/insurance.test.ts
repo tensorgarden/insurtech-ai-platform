@@ -874,4 +874,37 @@ describe("InsurTech AI Platform -- communication friction telemetry", () => {
       }
     }
   });
+
+  it("tracks proactive update coverage and channel handoffs", () => {
+    const validUpdateModes = new Set(["proactive", "on_request"]);
+    const openClaims = demoClaims.filter((claim) =>
+      ["new", "under_review"].includes(claim.status),
+    );
+
+    expect(openClaims.length).toBeGreaterThan(0);
+    expect(openClaims.every((claim) => claim.communicationCheckpoint.updateMode === "proactive")).toBe(
+      true,
+    );
+    expect(
+      demoClaims.some((claim) => claim.communicationCheckpoint.updateMode === "on_request"),
+    ).toBe(true);
+    expect(
+      demoClaims.some((claim) => claim.communicationCheckpoint.channelHandoffCount > 0),
+    ).toBe(true);
+
+    for (const claim of demoClaims) {
+      const checkpoint = claim.communicationCheckpoint;
+      expect(validUpdateModes.has(checkpoint.updateMode)).toBe(true);
+      expect(Number.isInteger(checkpoint.channelHandoffCount)).toBe(true);
+      expect(checkpoint.channelHandoffCount).toBeGreaterThanOrEqual(0);
+
+      if (checkpoint.audience === "third_party") {
+        expect(checkpoint.channelHandoffCount).toBe(0);
+      }
+
+      if (checkpoint.channelHandoffCount > 0) {
+        expect(checkpoint.audience).toBe("customer");
+      }
+    }
+  });
 });

@@ -346,6 +346,8 @@ export const demoClaims: Claim[] = [
       nextAction: "Confirm liability decision and customer estimate match before first payout recommendation.",
     },
     communicationCheckpoint: {
+      updateMode: "proactive",
+      channelHandoffCount: 0,
       audience: "customer",
       channel: "sms",
       preferredChannel: "sms",
@@ -421,6 +423,8 @@ export const demoClaims: Claim[] = [
       nextAction: "Collect the pending restoration estimate and reconcile fire department findings with the reserve before settlement review.",
     },
     communicationCheckpoint: {
+      updateMode: "proactive",
+      channelHandoffCount: 0,
       audience: "third_party",
       channel: "vendor_portal",
       preferenceMatch: "not_applicable",
@@ -553,6 +557,8 @@ export const demoClaims: Claim[] = [
       nextAction: "Send payout confirmation and close the evidence packet after the recovery window expires.",
     },
     communicationCheckpoint: {
+      updateMode: "proactive",
+      channelHandoffCount: 0,
       audience: "customer",
       channel: "customer_portal",
       preferredChannel: "customer_portal",
@@ -618,6 +624,8 @@ export const demoClaims: Claim[] = [
       nextAction: "File the premises-safety follow-up note against the liability loss-control record.",
     },
     communicationCheckpoint: {
+      updateMode: "on_request",
+      channelHandoffCount: 1,
       audience: "customer",
       channel: "phone",
       preferredChannel: "sms",
@@ -691,6 +699,8 @@ export const demoClaims: Claim[] = [
       nextAction: "Archive police report and item-photo evidence with the scheduled-property settlement worksheet.",
     },
     communicationCheckpoint: {
+      updateMode: "proactive",
+      channelHandoffCount: 0,
       audience: "customer",
       channel: "customer_portal",
       preferredChannel: "customer_portal",
@@ -757,6 +767,8 @@ export const demoClaims: Claim[] = [
       nextAction: "Supervisor validates adverse-action notice language against policy-lapse evidence before customer notice.",
     },
     communicationCheckpoint: {
+      updateMode: "proactive",
+      channelHandoffCount: 0,
       audience: "customer",
       channel: "customer_portal",
       preferredChannel: "customer_portal",
@@ -850,6 +862,8 @@ export const demoClaims: Claim[] = [
         "Collect the plumber's cause-of-loss report and the drying contractor's moisture readings before permanent repairs can be scoped.",
     },
     communicationCheckpoint: {
+      updateMode: "proactive",
+      channelHandoffCount: 0,
       audience: "third_party",
       channel: "vendor_portal",
       preferenceMatch: "not_applicable",

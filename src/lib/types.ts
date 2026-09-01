@@ -110,11 +110,15 @@ export type ClaimCommunicationStatus = "sent" | "scheduled" | "waiting_on_respon
 
 export type ClaimCommunicationPreferenceMatch = "preferred" | "alternate" | "not_applicable";
 
+export type ClaimCommunicationUpdateMode = "proactive" | "on_request";
+
 export interface ClaimCommunicationCheckpoint {
   audience: ClaimCommunicationAudience;
   channel: ClaimCommunicationChannel;
   preferredChannel?: CustomerCommunicationChannel;
   preferenceMatch: ClaimCommunicationPreferenceMatch;
+  updateMode: ClaimCommunicationUpdateMode;
+  channelHandoffCount: number;
   status: ClaimCommunicationStatus;
   recontactCount: number;
   lastSentAt?: string;

@@ -327,6 +327,13 @@ function ClaimCard({ claim }: { claim: Claim }) {
     alternate: "amber",
     not_applicable: "slate",
   };
+  const communicationUpdateTone: Record<
+    Claim["communicationCheckpoint"]["updateMode"],
+    "green" | "amber"
+  > = {
+    proactive: "green",
+    on_request: "amber",
+  };
   const complianceTone: Record<
     Claim["complianceCheckpoint"]["status"],
     "green" | "amber" | "red"
@@ -713,6 +720,9 @@ function ClaimCard({ claim }: { claim: Claim }) {
           <div className="mt-1 flex flex-wrap items-center gap-2 text-slate-400">
             <span>Audience: {claim.communicationCheckpoint.audience.split("_").join(" ")}</span>
             <span>Channel: {claim.communicationCheckpoint.channel.split("_").join(" ")}</span>
+            <Badge tone={communicationUpdateTone[claim.communicationCheckpoint.updateMode]}>
+              {claim.communicationCheckpoint.updateMode.split("_").join(" ")} update
+            </Badge>
             <span>Preferred: {claim.communicationCheckpoint.preferredChannel?.split("_").join(" ") || "not applicable"}</span>
             <Badge tone={communicationPreferenceTone[claim.communicationCheckpoint.preferenceMatch]}>
               {claim.communicationCheckpoint.preferenceMatch.split("_").join(" ")} channel
@@ -728,6 +738,15 @@ function ClaimCard({ claim }: { claim: Claim }) {
               }
             >
               Customer recontacts: {claim.communicationCheckpoint.recontactCount}
+            </span>
+            <span
+              className={
+                claim.communicationCheckpoint.channelHandoffCount > 0
+                  ? "font-medium text-amber-700"
+                  : "text-emerald-700"
+              }
+            >
+              Channel handoffs: {claim.communicationCheckpoint.channelHandoffCount}
             </span>
             {claim.communicationCheckpoint.nextDueAt && (
               <span>
