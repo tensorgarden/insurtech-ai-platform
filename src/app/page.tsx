@@ -334,6 +334,13 @@ function ClaimCard({ claim }: { claim: Claim }) {
     proactive: "green",
     on_request: "amber",
   };
+  const contactContinuityTone: Record<
+    Claim["contactContinuityCheckpoint"]["status"],
+    "green" | "amber"
+  > = {
+    stable: "green",
+    reassigned: "amber",
+  };
   const complianceTone: Record<
     Claim["complianceCheckpoint"]["status"],
     "green" | "amber" | "red"
@@ -756,6 +763,38 @@ function ClaimCard({ claim }: { claim: Claim }) {
                   day: "numeric",
                 })}
               </span>
+            )}
+          </div>
+        </div>
+        <div className="mt-2 rounded-md border border-violet-100 bg-violet-50/60 p-2">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <div className="font-semibold text-slate-700">Contact continuity</div>
+            <Badge tone={contactContinuityTone[claim.contactContinuityCheckpoint.status]}>
+              {claim.contactContinuityCheckpoint.status.split("_").join(" ")}
+            </Badge>
+          </div>
+          <p className="mt-1 text-slate-600">{claim.contactContinuityCheckpoint.nextAction}</p>
+          <div className="mt-1 text-slate-500">
+            Primary contact: {claim.contactContinuityCheckpoint.primaryContact} --{" "}
+            {claim.contactContinuityCheckpoint.primaryContactRole} --{" "}
+            {claim.contactContinuityCheckpoint.assignmentCount} adjuster assignment
+            {claim.contactContinuityCheckpoint.assignmentCount === 1 ? "" : "s"}
+          </div>
+          <div className="mt-1 text-slate-400">
+            {claim.contactContinuityCheckpoint.writtenStatusReportDueAt ? (
+              <>
+                Written status report due{" "}
+                <time dateTime={claim.contactContinuityCheckpoint.writtenStatusReportDueAt}>
+                  {new Date(
+                    claim.contactContinuityCheckpoint.writtenStatusReportDueAt,
+                  ).toLocaleDateString("en-US", {
+                    month: "short",
+                    day: "numeric",
+                  })}
+                </time>
+              </>
+            ) : (
+              "No written status report is due for the current assignment history."
             )}
           </div>
         </div>

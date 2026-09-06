@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import type { ClaimContactContinuityCheckpoint } from "@/lib/types";
 import {
   demoPolicies,
   demoClaims,
@@ -905,6 +906,48 @@ describe("InsurTech AI Platform -- communication friction telemetry", () => {
       if (checkpoint.channelHandoffCount > 0) {
         expect(checkpoint.audience).toBe("customer");
       }
+    }
+  });
+});
+
+const getContactContinuityCheckpoint = (
+  claim: (typeof demoClaims)[number],
+): ClaimContactContinuityCheckpoint => claim.contactContinuityCheckpoint;
+
+describe("InsurTech AI Platform -- adjuster continuity", () => {
+  it("keeps every claim tied to a named primary contact", () => {
+    for (const claim of demoClaims) {
+      const checkpoint = getContactContinuityCheckpoint(claim);
+      expect(checkpoint).toBeDefined();
+      expect(["stable", "reassigned"]).toContain(checkpoint?.status);
+      expect(checkpoint?.assignmentCount).toBeGreaterThanOrEqual(1);
+      expect(checkpoint?.primaryContact).toBe(claim.adjuster);
+      expect(["adjuster", "supervisor"]).toContain(checkpoint?.primaryContactRole);
+      expect(checkpoint?.nextAction.length).toBeGreaterThan(40);
+      if (checkpoint?.status === "stable") {
+        expect(checkpoint.writtenStatusReportDueAt).toBeUndefined();
+      }
+    }
+  });
+
+  it("requires a written status report after repeated adjuster reassignment", () => {
+    const reassignedClaims = demoClaims.filter(
+      (claim) => getContactContinuityCheckpoint(claim)?.status === "reassigned",
+    );
+
+    expect(reassignedClaims.length).toBeGreaterThan(0);
+
+    for (const claim of reassignedClaims) {
+      const checkpoint = getContactContinuityCheckpoint(claim);
+      const lastUpdated = Date.parse(claim.lastUpdated);
+      const reportDueAt = Date.parse(checkpoint?.writtenStatusReportDueAt ?? "");
+
+      expect(checkpoint?.assignmentCount).toBeGreaterThanOrEqual(3);
+      expect(checkpoint?.primaryContact).toBe(claim.adjuster);
+      expect(Number.isNaN(reportDueAt)).toBe(false);
+      expect(reportDueAt).toBeGreaterThan(lastUpdated);
+      expect(reportDueAt - lastUpdated).toBeLessThanOrEqual(30 * 24 * 60 * 60 * 1000);
+      expect(checkpoint?.nextAction).toMatch(/status report|primary contact|continuity/i);
     }
   });
 });

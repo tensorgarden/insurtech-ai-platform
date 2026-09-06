@@ -126,6 +126,17 @@ export interface ClaimCommunicationCheckpoint {
   message: string;
 }
 
+export type ClaimContactContinuityStatus = "stable" | "reassigned";
+
+export interface ClaimContactContinuityCheckpoint {
+  status: ClaimContactContinuityStatus;
+  assignmentCount: number;
+  primaryContact: string;
+  primaryContactRole: "adjuster" | "supervisor";
+  writtenStatusReportDueAt?: string;
+  nextAction: string;
+}
+
 export type ClaimComplianceObligation =
   | "claim_acknowledgment"
   | "status_update"
@@ -279,6 +290,7 @@ export interface Claim {
   adverseActionNoticeRequired: boolean;
   governanceCheckpoint: ClaimGovernanceCheckpoint;
   communicationCheckpoint: ClaimCommunicationCheckpoint;
+  contactContinuityCheckpoint: ClaimContactContinuityCheckpoint;
   complianceCheckpoint: ClaimComplianceCheckpoint;
   claimantReviewCheckpoint?: ClaimantReviewCheckpoint;
   lossMitigationCheckpoint?: ClaimLossMitigationCheckpoint;

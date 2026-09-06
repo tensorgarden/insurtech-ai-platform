@@ -358,6 +358,14 @@ export const demoClaims: Claim[] = [
       nextDueAt: "2026-06-09T13:00:00Z",
       message: "Customer gets a next-day liability status update after the adjuster confirms the police citation and repair estimate alignment.",
     },
+    contactContinuityCheckpoint: {
+      status: "stable",
+      assignmentCount: 1,
+      primaryContact: "Maria Gonzalez",
+      primaryContactRole: "adjuster",
+      nextAction:
+        "Keep Maria Gonzalez as the primary claim contact while liability evidence is confirmed and the customer receives the scheduled update.",
+    },
     complianceCheckpoint: {
       jurisdiction: "IL",
       obligation: "claim_acknowledgment",
@@ -433,6 +441,15 @@ export const demoClaims: Claim[] = [
       lastSentAt: "2026-06-07T11:20:00Z",
       nextDueAt: "2026-06-10T11:00:00Z",
       message: "Restoration vendor follow-up is tracked separately so the customer is not recontacted for a third-party estimate blocker.",
+    },
+    contactContinuityCheckpoint: {
+      status: "reassigned",
+      assignmentCount: 3,
+      primaryContact: "Robert Kim",
+      primaryContactRole: "adjuster",
+      writtenStatusReportDueAt: "2026-06-10T17:00:00Z",
+      nextAction:
+        "Reconfirm Robert Kim as the primary contact and issue the written status report so the customer does not have to restart the claim after adjuster handoffs.",
     },
     complianceCheckpoint: {
       jurisdiction: "WA",
@@ -568,6 +585,14 @@ export const demoClaims: Claim[] = [
       lastSentAt: "2026-06-01T17:05:00Z",
       message: "Customer payout confirmation was sent after the recovery window closed and the evidence packet was archived.",
     },
+    contactContinuityCheckpoint: {
+      status: "stable",
+      assignmentCount: 1,
+      primaryContact: "Maria Gonzalez",
+      primaryContactRole: "adjuster",
+      nextAction:
+        "Keep Maria Gonzalez as the primary claim contact while payout confirmation is delivered and the recovery evidence packet is archived.",
+    },
     complianceCheckpoint: {
       jurisdiction: "CA",
       obligation: "settlement_payment",
@@ -634,6 +659,14 @@ export const demoClaims: Claim[] = [
       recontactCount: 0,
       lastSentAt: "2026-05-10T15:30:00Z",
       message: "Settlement closure notice was delivered by phone after legal confirmed premises-safety follow-up was filed.",
+    },
+    contactContinuityCheckpoint: {
+      status: "stable",
+      assignmentCount: 1,
+      primaryContact: "Jennifer Wu",
+      primaryContactRole: "adjuster",
+      nextAction:
+        "Keep Jennifer Wu as the primary claim contact while the settlement closure and legal follow-up remain available in the file.",
     },
     complianceCheckpoint: {
       jurisdiction: "TX",
@@ -710,6 +743,14 @@ export const demoClaims: Claim[] = [
       lastSentAt: "2026-04-15T10:45:00Z",
       message: "Customer settlement update was sent with the scheduled-property worksheet archived for claim history visibility.",
     },
+    contactContinuityCheckpoint: {
+      status: "stable",
+      assignmentCount: 1,
+      primaryContact: "Robert Kim",
+      primaryContactRole: "adjuster",
+      nextAction:
+        "Keep Robert Kim as the primary claim contact while the paid settlement worksheet and archived evidence remain available for questions.",
+    },
     complianceCheckpoint: {
       jurisdiction: "CA",
       obligation: "settlement_payment",
@@ -778,6 +819,14 @@ export const demoClaims: Claim[] = [
       lastSentAt: "2026-02-28T09:00:00Z",
       nextDueAt: "2026-03-02T17:30:00Z",
       message: "Customer notice remains scheduled until supervisor validates policy-lapse evidence and adverse-action language.",
+    },
+    contactContinuityCheckpoint: {
+      status: "stable",
+      assignmentCount: 1,
+      primaryContact: "Jennifer Wu",
+      primaryContactRole: "adjuster",
+      nextAction:
+        "Keep Jennifer Wu as the primary claim contact while supervisor validation and the claimant reconsideration path remain open.",
     },
     complianceCheckpoint: {
       jurisdiction: "CA",
@@ -873,6 +922,14 @@ export const demoClaims: Claim[] = [
       nextDueAt: "2026-06-17T11:00:00Z",
       message:
         "Drying contractor follow-up tracks the pending moisture readings and completion certificate in the vendor lane, separate from customer recontact.",
+    },
+    contactContinuityCheckpoint: {
+      status: "stable",
+      assignmentCount: 1,
+      primaryContact: "Robert Kim",
+      primaryContactRole: "adjuster",
+      nextAction:
+        "Keep Robert Kim as the primary claim contact while the vendor drying evidence and cause-of-loss review are completed.",
     },
     complianceCheckpoint: {
       jurisdiction: "FL",
