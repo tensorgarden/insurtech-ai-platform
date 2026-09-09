@@ -951,3 +951,46 @@ describe("InsurTech AI Platform -- adjuster continuity", () => {
     }
   });
 });
+
+
+describe("InsurTech AI Platform -- evidence consistency gate", () => {
+  it("records a typed, reviewed evidence consistency status for every claim", () => {
+    const validStatuses = new Set(["consistent", "needs_reconciliation", "not_assessed"]);
+
+    for (const claim of demoClaims) {
+      const consistency = claim.evidenceConsistency;
+      expect(validStatuses.has(consistency.status)).toBe(true);
+      expect(consistency.summary.length).toBeGreaterThan(50);
+      expect(consistency.reviewedAt).toBeDefined();
+      expect(Number.isNaN(Date.parse(consistency.reviewedAt ?? ""))).toBe(false);
+
+      if (claim.documentStatus !== "complete") {
+        expect(consistency.status).toBe("needs_reconciliation");
+      }
+
+      if (consistency.status === "consistent") {
+        expect(claim.documentStatus).toBe("complete");
+      }
+    }
+  });
+
+  it("keeps contradictions and evidence gaps in reconciliation before AI output is trusted", () => {
+    const reconciliationClaims = demoClaims.filter(
+      (claim) => claim.evidenceConsistency.status === "needs_reconciliation",
+    );
+
+    expect(reconciliationClaims.length).toBeGreaterThan(0);
+    expect(reconciliationClaims.some((claim) => claim.documentStatus !== "complete")).toBe(true);
+
+    for (const claim of reconciliationClaims) {
+      expect(`${claim.evidenceConsistency.summary} ${claim.aiDecisionRationale}`).toMatch(
+        /reconcil|pending|variance|support|cause|moisture/i,
+      );
+      expect(claim.reviewGate).not.toBe("auto_clear");
+
+      if (claim.triageLane === "missing_information") {
+        expect(claim.evidenceConsistency.status).toBe("needs_reconciliation");
+      }
+    }
+  });
+});

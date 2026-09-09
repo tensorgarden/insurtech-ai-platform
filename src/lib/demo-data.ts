@@ -394,6 +394,11 @@ export const demoClaims: Claim[] = [
       { label: "Police citation for other driver", status: "received", ownerRole: "adjuster" },
       { label: "Initial repair estimate", status: "received", ownerRole: "adjuster" },
     ],
+    evidenceConsistency: {
+      status: "consistent",
+      summary: "Dashcam stills, police citation, and repair estimate align on the rear-end loss timeline and liability facts.",
+      reviewedAt: "2026-06-08T12:15:00Z",
+    },
     aiFraudScore: 12,
     fraudSignals: [
       {
@@ -537,6 +542,11 @@ export const demoClaims: Claim[] = [
         dueAt: "2026-06-11T17:00:00Z",
       },
     ],
+    evidenceConsistency: {
+      status: "needs_reconciliation",
+      summary: "Restoration scope is still pending and the fire report has not yet reconciled hidden-damage assumptions with the reserve.",
+      reviewedAt: "2026-06-07T11:00:00Z",
+    },
     aiFraudScore: 18,
     fraudSignals: [
       {
@@ -619,6 +629,11 @@ export const demoClaims: Claim[] = [
       { label: "Active policy and deductible confirmation", status: "received", ownerRole: "adjuster" },
       { label: "Recovery window search log", status: "received", ownerRole: "adjuster" },
     ],
+    evidenceConsistency: {
+      status: "consistent",
+      summary: "Police report, active policy record, and recovery search log support the theft timeline and payout packet.",
+      reviewedAt: "2026-06-01T16:30:00Z",
+    },
     aiFraudScore: 5,
     fraudSignals: [],
     adjuster: "Maria Gonzalez",
@@ -695,6 +710,11 @@ export const demoClaims: Claim[] = [
       { label: "Customer incident statement", status: "received", ownerRole: "legal" },
       { label: "Premises safety inspection", status: "received", ownerRole: "adjuster" },
     ],
+    evidenceConsistency: {
+      status: "needs_reconciliation",
+      summary: "Medical bill evidence is present, but provider support is incomplete and requires legal reconciliation before relying on the settlement packet.",
+      reviewedAt: "2026-05-10T14:00:00Z",
+    },
     aiFraudScore: 22,
     fraudSignals: [
       {
@@ -778,6 +798,11 @@ export const demoClaims: Claim[] = [
       { label: "Customer-uploaded property photos", status: "received", ownerRole: "adjuster" },
       { label: "Scheduled-property settlement worksheet", status: "received", ownerRole: "adjuster" },
     ],
+    evidenceConsistency: {
+      status: "consistent",
+      summary: "Police report, customer property photos, and the scheduled-property worksheet support the theft settlement packet.",
+      reviewedAt: "2026-04-15T09:30:00Z",
+    },
     aiFraudScore: 9,
     fraudSignals: [],
     adjuster: "Robert Kim",
@@ -867,6 +892,11 @@ export const demoClaims: Claim[] = [
         dueAt: "2026-03-02T17:00:00Z",
       },
     ],
+    evidenceConsistency: {
+      status: "needs_reconciliation",
+      summary: "The policy-lapse timeline and recorded statement variance remain unresolved, so the adverse recommendation needs reviewer reconciliation.",
+      reviewedAt: "2026-03-01T12:00:00Z",
+    },
     aiFraudScore: 87,
     fraudSignals: [
       {
@@ -981,6 +1011,11 @@ export const demoClaims: Claim[] = [
         dueAt: "2026-06-17T17:00:00Z",
       },
     ],
+    evidenceConsistency: {
+      status: "needs_reconciliation",
+      summary: "The plumber report and drying readings are still pending, so the loss cause and moisture evidence cannot yet be reconciled.",
+      reviewedAt: "2026-06-15T10:00:00Z",
+    },
     aiFraudScore: 18,
     fraudSignals: [
       {

@@ -60,6 +60,17 @@ export type ClaimEvidenceRequirementStatus =
   | "pending_third_party"
   | "needs_adjuster_review";
 
+export type ClaimEvidenceConsistencyStatus =
+  | "consistent"
+  | "needs_reconciliation"
+  | "not_assessed";
+
+export interface ClaimEvidenceConsistency {
+  status: ClaimEvidenceConsistencyStatus;
+  summary: string;
+  reviewedAt?: string;
+}
+
 export interface ClaimEvidenceRequirement {
   label: string;
   status: ClaimEvidenceRequirementStatus;
@@ -301,6 +312,7 @@ export interface Claim {
   aiDecisionRationale: string;
   evidenceAnchors: ClaimEvidenceAnchor[];
   evidenceRequirements: ClaimEvidenceRequirement[];
+  evidenceConsistency: ClaimEvidenceConsistency;
   aiFraudScore: number;
   fraudSignals: ClaimFraudSignal[];
   adjuster: string;

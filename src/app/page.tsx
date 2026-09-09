@@ -310,6 +310,14 @@ function ClaimCard({ claim }: { claim: Claim }) {
     pending_third_party: "amber",
     needs_adjuster_review: "purple",
   };
+  const evidenceConsistencyTone: Record<
+    Claim["evidenceConsistency"]["status"],
+    "green" | "amber" | "slate"
+  > = {
+    consistent: "green",
+    needs_reconciliation: "amber",
+    not_assessed: "slate",
+  };
   const communicationTone: Record<
     Claim["communicationCheckpoint"]["status"],
     "green" | "amber" | "blue" | "slate"
@@ -530,6 +538,26 @@ function ClaimCard({ claim }: { claim: Claim }) {
               adjuster-ready payout review.
             </p>
           )}
+          <div className="mt-2 border-t border-slate-100 pt-2">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <span className="font-semibold text-slate-700">Evidence consistency</span>
+              <Badge tone={evidenceConsistencyTone[claim.evidenceConsistency.status]}>
+                {claim.evidenceConsistency.status.split("_").join(" ")}
+              </Badge>
+            </div>
+            <p className="mt-1 text-slate-500">{claim.evidenceConsistency.summary}</p>
+            {claim.evidenceConsistency.reviewedAt && (
+              <p className="mt-1 text-slate-400">
+                Reviewed{" "}
+                <time dateTime={claim.evidenceConsistency.reviewedAt}>
+                  {new Date(claim.evidenceConsistency.reviewedAt).toLocaleDateString("en-US", {
+                    month: "short",
+                    day: "numeric",
+                  })}
+                </time>
+              </p>
+            )}
+          </div>
         </div>
         {claim.lossMitigationCheckpoint && (
           <div className="mt-2 rounded-md border border-blue-100 bg-blue-50/60 p-2">
