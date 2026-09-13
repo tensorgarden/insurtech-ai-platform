@@ -506,6 +506,25 @@ function ClaimCard({ claim }: { claim: Claim }) {
           {claim.adverseActionNoticeRequired ? "adverse notice required" : "no adverse notice"}
         </div>
         <div className="mt-2 rounded-md bg-white/70 p-2">
+          <div className="font-semibold text-slate-700">Evidence context</div>
+          <ul className="mt-1 space-y-1 text-slate-500">
+            {claim.evidenceAnchors.map((anchor) => (
+              <li key={`${claim.id}-${anchor.label}`} className="flex flex-wrap justify-between gap-2">
+                <span>{anchor.label}</span>
+                <span className="text-slate-400">
+                  {anchor.sourceType.split("_").join(" ")} -- received{" "}
+                  <time dateTime={anchor.receivedAt}>
+                    {new Date(anchor.receivedAt).toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                    })}
+                  </time>
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className="mt-2 rounded-md bg-white/70 p-2">
           <div className="font-semibold text-slate-700">Required evidence checklist</div>
           <ul className="mt-1 space-y-1">
             {claim.evidenceRequirements.map((item) => (
